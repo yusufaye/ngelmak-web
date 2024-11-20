@@ -1,0 +1,74 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (comment()) {
+      <div>
+        <h2 data-cy="commentDetailsHeading"><span >Comment</span></h2>
+
+        <hr />
+
+        <app-alert-error></app-alert-error>
+
+        <app-alert></app-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span >ID</span></dt>
+          <dd>
+            <span>{{ comment()!.id }}</span>
+          </dd>
+          <dt><span >Opinion</span></dt>
+          <dd>
+            <span >{{
+              { null: '', DEFAULT: 'DEFAULT', OPPOSED: 'OPPOSED', SUPPORT: 'SUPPORT', NEUTRAL: 'NEUTRAL', STRENGTHENED: 'REINFORCED' }[
+                comment()!.opinion ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span >At</span></dt>
+          <dd>
+            <span>{{ comment()!.at | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span >Last Update</span></dt>
+          <dd>
+            <span>{{ comment()!.lastUpdate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span >Content</span></dt>
+          <dd>
+            <span>{{ comment()!.content }}</span>
+          </dd>
+          <dt><span >Post</span></dt>
+          <dd>
+            @if (comment()!.post) {
+              <div>
+                <a [routerLink]="['/post', comment()!.post?.id, 'view']">{{ comment()!.post?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span >Replayto</span></dt>
+          <dd>
+            @if (comment()!.replayto) {
+              <div>
+                <a [routerLink]="['/comment', comment()!.replayto?.id, 'view']">{{ comment()!.replayto?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span >Account</span></dt>
+          <dd>
+            @if (comment()!.account) {
+              <div>
+                <a [routerLink]="['/ngelmak-account', comment()!.account?.id, 'view']">{{ comment()!.account?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <span icon="arrow-left"></span>&nbsp;<span >Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/comment', comment()!.id, 'edit']" class="btn btn-primary">
+          <span icon="pencil-alt"></span>&nbsp;<span >Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

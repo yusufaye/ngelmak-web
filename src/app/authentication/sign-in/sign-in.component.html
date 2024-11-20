@@ -1,0 +1,76 @@
+<div
+  class="flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900"
+>
+  <a
+    href=""
+    class="flex items-center justify-center mb-8 text-2xl font-semibold lg:mb-10 dark:text-white"
+  >
+    <img src="content/images/logo.svg" class="mr-4 h-11" alt="FlowBite Logo" />
+    <span>Flowbite</span>
+  </a>
+  <!-- Card -->
+  <div
+    class="w-full max-w-lg p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800"
+  >
+    <h1 class="text-4xl py-4 font-bold text-gray-900 dark:text-slate-200">
+      Page d'authentification
+    </h1>
+    <div class="text-slate-500">
+      @if (authenticationError()) {
+      <div class="alert alert-danger">
+        <strong>Erreur d&apos;authentification !</strong> Veuillez vérifier vos
+        identifiants de connexion.
+      </div>
+      }
+      <form
+        class="flex flex-col gap-4"
+        (ngSubmit)="signIn()"
+        [formGroup]="signInForm"
+      >
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Nom d'utilisateur</mat-label>
+          <input matInput formControlName="username" />
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Mot de passe</mat-label>
+          <input
+            matInput
+            [type]="hide ? 'password' : 'text'"
+            formControlName="password"
+          />
+          <mat-icon matSuffix (click)="hide = !hide">{{
+            hide ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="rememberMe"
+          >Garder la session ouverte</mat-checkbox
+        >
+
+        <button
+          type="submit"
+          class="flex justify-center gap-2 p-3 rounded-md text-white bg-slate-600"
+        >
+          <mat-icon>signIn</mat-icon>
+          <span>Connexion</span>
+        </button>
+      </form>
+      <div class="rounded-sm border-gray-900 mt-3 p-1">
+        <a
+          class="text-blue-400 underline"
+          routerLink="/account/reset/request"
+          id="signIn.password.forgot"
+          >Avez-vous oublié votre mot de passe ?</a
+        >
+      </div>
+
+      <div class="flex gap-2 alert alert-warning">
+        <span>Vous n&apos;avez pas encore de compte ?</span>
+        <a class="text-blue-400 underline" routerLink="/account/register"
+          >Créer un compte</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

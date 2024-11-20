@@ -1,0 +1,437 @@
+<div [@scaleInOutAnimation]="attachments" class="flex flex-col gap-3.5">
+  <div *ngFor="let attachment of _attachments()" class="flex flex-col gap-3.5">
+    @if (attachment.category == TEXT) {
+    <div
+      class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+    >
+      <!-- HEADER -->
+      <div
+        class="flex items-center justify-between w-full p-5 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+        (click)="toggleExpand(attachment.id)"
+      >
+        @if (!expandedIndexes.has(attachment.id)) {
+        <h2
+          class="flex-auto m-0 text-base truncate ... font-semibold text-gray-900 dark:text-white"
+        >
+          {{ attachment.content | removeHtml }}
+        </h2>
+        }
+        <div class="flex items-center ml-auto">
+          <button
+            type="button"
+            (click)="
+              $event.stopPropagation(); openAttachmentTextDialog(attachment.id)
+            "
+            matTooltip="Modifier"
+            class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+          >
+            <svg
+              class="w-5 h-5 text-blue-500 dark:text-blue-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); remove(attachment)"
+            matTooltip="Supprimer"
+            class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+          >
+            <svg
+              class="w-5 h-5 text-red-500 dark:text-red-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            [matTooltip]="
+              !expandedIndexes.has(attachment.id) ? 'Etendre' : 'Réduire'
+            "
+            class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+          >
+            @if (!expandedIndexes.has(attachment.id)) {
+            <svg
+              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 9-7 7-7-7"
+              />
+            </svg>
+            } @else {
+            <svg
+              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m5 15 7-7 7 7"
+              />
+            </svg>
+            }
+          </button>
+          <!-- MOVE UP/DOWN -->
+          <div class="flex flex-col">
+            <button
+              type="button"
+              (click)="$event.stopPropagation(); moveup(attachment);"
+              class="rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+            >
+              <svg
+                class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16.881 16H7.119a1 1 0 0 1-.772-1.636l4.881-5.927a1 1 0 0 1 1.544 0l4.88 5.927a1 1 0 0 1-.77 1.636Z"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              (click)="$event.stopPropagation(); movedown(attachment);"
+              class="rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+            >
+              <svg
+                class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7.119 8h9.762a1 1 0 0 1 .772 1.636l-4.881 5.927a1 1 0 0 1-1.544 0l-4.88-5.927A1 1 0 0 1 7.118 8Z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- BODY -->
+      @if (expandedIndexes.has(attachment.id)) {
+      <div
+        @fadeInUp
+        class="p-5 mt-4 relative max-h-96 text-gray-900 dark:text-white overflow-y-auto"
+        [innerHTML]="attachment.content"
+      ></div>
+      }
+    </div>
+    } @else if (attachment.category == VOICE_RECORDED) {
+    <div
+      class="flex flex-col sm:flex-row gap-2 p-3 border border-gray-200 dark:border-gray-700 rounded-lg"
+    >
+      <audio-plyr class="flex-auto" [attachment]="attachment" [source]="attachment.content"></audio-plyr>
+      <div class="flex items-center ml-auto">
+        <button
+          type="button"
+          matTooltip="Remplacer"
+          (click)="openAttachmentVoiceRecoder(attachment.position)"
+          class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+        >
+          <svg
+            class="w-5 h-5 text-gray-500 dark:text-gray-400"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"
+            />
+          </svg>
+        </button>
+        <button
+          type="button"
+          matTooltip="Supprimer"
+          (click)="remove(attachment)"
+          class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+        >
+          <svg
+            class="w-5 h-5 text-red-500 dark:text-red-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+            />
+          </svg>
+        </button>
+        <!-- MOVE UP/DOWN -->
+        <div class="flex flex-col">
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); moveup(attachment);"
+            class="rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+          >
+            <svg
+              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16.881 16H7.119a1 1 0 0 1-.772-1.636l4.881-5.927a1 1 0 0 1 1.544 0l4.88 5.927a1 1 0 0 1-.77 1.636Z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); movedown(attachment);"
+            class="rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+          >
+            <svg
+              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7.119 8h9.762a1 1 0 0 1 .772 1.636l-4.881 5.927a1 1 0 0 1-1.544 0l-4.88-5.927A1 1 0 0 1 7.118 8Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    } @else if (attachment.category == DOCUMENT) {
+    <!-- Item -->
+    <div
+      class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg"
+    >
+      <div class="flex items-center justify-center w-10 h-10 mr-3 rounded-lg">
+        <div class="w-full">
+          @if (attachment.type.includes('pdf')) {
+          <img src="content/svg/pdf-svgrepo-com.svg" alt="pdf-icon" />
+          } @else if (attachment.type.includes('word')) {
+          <img src="content/svg/word-svgrepo-com.svg" alt="word-icon" />
+          } @else if (attachment.type.includes('excel')) {
+          <img src="content/svg/excel-svgrepo-com.svg" alt="excel-icon" />
+          } @else {
+          <img src="content/svg/file-part-2-svgrepo-com.svg" alt="file-icon" />
+          }
+        </div>
+      </div>
+      <div class="mr-4">
+        <p class="text-sm font-semibold text-gray-900 dark:text-white">
+          {{ attachment.filename }}
+        </p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">PDF, 2.3 MB</p>
+      </div>
+      <div class="flex items-center ml-auto">
+        <button
+          type="button"
+          matTooltip="Télécharger"
+          class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+        >
+          <svg
+            class="w-5 h-5 text-gray-500 dark:text-gray-400"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              clip-rule="evenodd"
+              fill-rule="evenodd"
+              d="M12 2.25a.75.75 0 01.75.75v11.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06l3.22 3.22V3a.75.75 0 01.75-.75zm-9 13.5a.75.75 0 01.75.75v2.25a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V16.5a.75.75 0 011.5 0v2.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V16.5a.75.75 0 01.75-.75z"
+            ></path>
+          </svg>
+        </button>
+        <button
+          type="button"
+          matTooltip="Supprimer"
+          (click)="remove(attachment)"
+          class="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+        >
+          <svg
+            class="w-5 h-5 text-red-500 dark:text-red-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+            />
+          </svg>
+        </button>
+        <!-- MOVE UP/DOWN -->
+        <div class="flex flex-col">
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); moveup(attachment);"
+            class="rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+          >
+            <svg
+              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16.881 16H7.119a1 1 0 0 1-.772-1.636l4.881-5.927a1 1 0 0 1 1.544 0l4.88 5.927a1 1 0 0 1-.77 1.636Z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); movedown(attachment);"
+            class="rounded hover:bg-gray-200 dark:hover:bg-gray-50"
+          >
+            <svg
+              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7.119 8h9.762a1 1 0 0 1 .772 1.636l-4.881 5.927a1 1 0 0 1-1.544 0l-4.88-5.927A1 1 0 0 1 7.118 8Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="flex content-start items-center relative w-fit h-16">
+    <input type="checkbox" id="toggle" checked />
+    <label
+      class="button flex justify-start items-center h-16 text-blue-800 py-0 px-6 dark:text-blue-400 bg-blue-50 dark:bg-gray-800 rounded-2xl cursor-pointer absolute z-10 w-80"
+      for="toggle"
+    >
+      <div matTooltip="Ajouter un contenu" class="icon"></div>
+      <div class="nav opacity-100 p-3 w-full rounded-md">
+        <ul class="flex gap-2 p-0 m-0">
+          <li class="opacity-0 list-none">
+            <a
+              (click)="openAttachmentTextDialog()"
+              matTooltip="Taper un texte"
+              class="flex items-center justify-center text-xl w-12 h-12 text-gray-800 dark:text-gray-300 hover:text-gray-700 hover:dark:text-gray-200 hover:bg-blue-100 hover:dark:bg-gray-900 hover:rounded-lg"
+              ><i class="fa-regular fa-keyboard"></i
+            ></a>
+          </li>
+          <li class="opacity-0 list-none">
+            <a
+              (click)="openAttachmentVoiceRecoder()"
+              matTooltip="Enregister un vocal"
+              class="flex items-center justify-center text-xl w-12 h-12 text-gray-800 dark:text-gray-300 hover:text-gray-700 hover:dark:text-gray-200 hover:bg-blue-100 hover:dark:bg-gray-900 hover:rounded-lg"
+              ><i class="fa-solid fa-microphone-lines"></i
+            ></a>
+          </li>
+          <li class="opacity-0 list-none">
+            <a
+              (click)="openAttachmentFileInput()"
+              matTooltip="Importer un document (video, audio, pdf, etc.)"
+              class="flex items-center justify-center text-xl w-12 h-12 text-gray-800 dark:text-gray-300 hover:text-gray-700 hover:dark:text-gray-200 hover:bg-blue-100 hover:dark:bg-gray-900 hover:rounded-lg"
+              ><i class="fa-regular fa-file"></i
+            ></a>
+          </li>
+        </ul>
+      </div>
+    </label>
+  </div>
+</div>

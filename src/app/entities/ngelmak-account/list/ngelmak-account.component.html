@@ -1,0 +1,173 @@
+<div>
+  <h2 id="page-heading" data-cy="NgelmakAccountHeading">
+    <span >NgelmakAccounts</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <span class="sync" ></span>
+        <span >Actualiser la liste</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-ngelmak-account"
+        [routerLink]="['/ngelmak-account/new']"
+      >
+        <span class="plus"></span>
+        <span >Créer un nouveau Ngelmak Account</span>
+      </button>
+    </div>
+  </h2>
+
+  <app-alert-error></app-alert-error>
+
+  <app-alert></app-alert>
+
+  @if (ngelmakAccounts?.length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span >Aucun Ngelmak Account trouvé</span>
+    </div>
+  }
+
+  @if (ngelmakAccounts && ngelmakAccounts.length > 0) {
+    <div class="table-responsive table-entities" >
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr ngelmakSort [sortState]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" ngelmakSortBy="id">
+              <div class="d-flex">
+                <span >ID</span>
+
+                <span class="p-1" class="sort"></span>
+              </div>
+            </th>
+            <th scope="col" ngelmakSortBy="name">
+              <div class="d-flex">
+                <span >Name</span>
+
+                <span class="p-1" class="sort"></span>
+              </div>
+            </th>
+            <th scope="col" ngelmakSortBy="foregroundPicture">
+              <div class="d-flex">
+                <span >Foreground Picture</span>
+
+                <span class="p-1" class="sort"></span>
+              </div>
+            </th>
+            <th scope="col" ngelmakSortBy="backgroundPicture">
+              <div class="d-flex">
+                <span >Background Picture</span>
+
+                <span class="p-1" class="sort"></span>
+              </div>
+            </th>
+            <th scope="col" ngelmakSortBy="visibility">
+              <div class="d-flex">
+                <span >Visibility</span>
+
+                <span class="p-1" class="sort"></span>
+              </div>
+            </th>
+            <th scope="col" ngelmakSortBy="createdAt">
+              <div class="d-flex">
+                <span >Created At</span>
+
+                <span class="p-1" class="sort"></span>
+              </div>
+            </th>
+            <th scope="col" ngelmakSortBy="configuration.id">
+              <div class="d-flex">
+                <span >Configuration</span>
+                <span class="p-1" class="sort"></span>
+              </div>
+            </th>
+            <th scope="col" ngelmakSortBy="user.id">
+              <div class="d-flex">
+                <span >User</span>
+                <span class="p-1" class="sort"></span>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ngelmakAccount of ngelmakAccounts; track ngelmakAccount) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/ngelmak-account', ngelmakAccount.id, 'view']">{{ ngelmakAccount.id }}</a>
+              </td>
+              <td>{{ ngelmakAccount.name }}</td>
+              <td>{{ ngelmakAccount.foregroundPicture }}</td>
+              <td>{{ ngelmakAccount.backgroundPicture }}</td>
+              <td >
+                {{
+                  { null: '', DEFAULT: 'DEFAULT', PUBLIC: 'PUBLIC', PRIVATE: 'PRIVATE', AUTHORITY: 'AUTHORITY', JURNALIST: 'JURNALIST' }[
+                    ngelmakAccount.visibility ?? 'null'
+                  ]
+                }}
+              </td>
+              <td>{{ ngelmakAccount.createdAt | formatMediumDatetime }}</td>
+              <td>
+                @if (ngelmakAccount.configuration) {
+                  <div>
+                    <a [routerLink]="['/config', ngelmakAccount.configuration.id, 'view']">{{ ngelmakAccount.configuration.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                {{ ngelmakAccount.user?.id }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/ngelmak-account', ngelmakAccount.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <span class="eye"></span>
+                    <span class="d-none d-md-inline" >Voir</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/ngelmak-account', ngelmakAccount.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <span icon="pencil-alt"></span>
+                    <span class="d-none d-md-inline" >Editer</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(ngelmakAccount)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <span class="times"></span>
+                    <span class="d-none d-md-inline" >Supprimer</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (ngelmakAccounts && ngelmakAccounts.length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <app-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></app-item-count>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <!-- <ngb-pagination
+          [collectionSize]="totalItems"
+          [page]="page"
+          [pageSize]="itemsPerPage"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        ></ngb-pagination> -->
+      </div>
+    </div>
+  }
+</div>

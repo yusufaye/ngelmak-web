@@ -1,0 +1,51 @@
+@use "content/scss/theme" as theme;
+@import "content/scss/scrollbar.scss";
+@import "quill/dist/quill.core";
+@import "quill/dist/quill.snow";
+@import "content/scss/quill";
+@import "@fortawesome/fontawesome-free/css/all";
+@import "content/scss/global.scss";
+@import "content/scss/material.scss";
+
+@import "node_modules/plyr/dist/plyr.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.mdc-notched-outline__notch {
+  border-right: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  h1 {
+    @apply text-4xl font-bold mb-4; /* Large and bold heading with margin bottom */
+  }
+  h2 {
+    @apply text-3xl font-semibold mb-3; /* Slightly smaller heading */
+  }
+  h3 {
+    @apply text-2xl font-medium mb-2; /* Even smaller heading */
+  }
+  p {
+    @apply text-base mb-4 leading-relaxed; /* Base paragraph style */
+  }
+  a {
+    @apply text-blue-500 hover:text-blue-700; /* Style links with hover effect */
+  }
+  ul {
+    // @apply list-disc pl-5 mb-4; /* Styled list with some margin */
+  }
+  ol {
+    // @apply list-decimal pl-5 mb-4; /* Styled ordered list with some margin */
+  }
+  blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic text-gray-500 mb-4; /* Blockquote styling */
+  }
+}

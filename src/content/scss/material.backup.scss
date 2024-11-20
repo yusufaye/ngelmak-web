@@ -1,0 +1,374 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  @apply text-gray-900;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.mdc-notched-outline__notch {
+  border-right: none;
+}
+
+@import "quill/dist/quill.core.css";
+@import "quill/dist/quill.snow.css";
+
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+/* Cibler tous les div dont la classe contient "mat-" */
+// div[class*="mat-"],
+// input,
+// mat-label {
+//   @apply text-red-400;
+//   @apply focus:outline-red-500;
+// }
+
+.mat-mdc-text-field-wrapper {
+  @apply dark:bg-slate-600 border-0;
+}
+
+mat-label {
+  @apply text-slate-600 dark:text-white;
+}
+
+
+
+/* Light Theme */
+// background -> white #e2e8f0
+// color -> #475569
+// placeholder -> #475569
+:root {
+  /* mat input */
+  --mat-form-field-container-text-size: 1rem;
+  --mdc-outlined-text-field-input-text-color: #475569 !important;
+  --mdc-outlined-text-field-outline-color: #94a3b8; /* border color of mat-form-field */
+  --mdc-outlined-text-field-hover-outline-color: #1e293b !important; /* border color on hover of mat-form-field */
+  --mdc-outlined-text-field-outline-width: 2px;
+  --mdc-outlined-text-field-focus-outline-color: #60a5fa; /* focus:outline */
+  --mdc-outlined-text-field-input-text-placeholder-color: #475569 !important;
+  --mat-select-panel-background-color: #e2e8f0 !important;
+  --mat-select-placeholder-text-color: #475569 !important;
+  --mat-option-hover-state-layer-color: #94a3b8 !important;
+  --mat-option-label-text-color: #475569 !important;
+  --mdc-chip-label-text-color: #475569 !important;
+  --mdc-chip-with-trailing-icon-trailing-icon-color: #475569 !important;
+  --mat-form-field-container-vertical-padding: 10px !important; // default 16px
+  --mat-form-field-container-height: 32px !important; // default 56px
+}
+:root [class*="mat-"] {
+  /* mat checkbox */
+  --mat-mdc-focus-indicator-border-color: red;
+  --mdc-checkbox-selected-pressed-icon-color: blue !important;
+  --mdc-checkbox-selected-checkmark-color: white;
+  --mdc-checkbox-selected-focus-icon-color: blue !important;
+  --mdc-checkbox-selected-hover-icon-color: blue !important;
+  --mdc-checkbox-selected-icon-color: blue !important;
+  --mdc-checkbox-selected-focus-state-layer-color: red !important;
+  --mdc-checkbox-selected-hover-state-layer-color: red !important;
+  --mdc-checkbox-unselected-pressed-state-layer-color: red !important;
+  --mat-checkbox-disabled-label-color: rgba(224, 227, 226, 0.38) !important;
+  --mat-checkbox-label-text-color: #64748b !important;
+}
+
+/* Dark Theme */
+// background -> #1e293b, #475569
+// color -> white
+// placeholder ->
+.dark {
+  --mat-form-field-container-text-size: 1rem;
+  --mdc-outlined-text-field-input-text-color: white !important;
+  --mdc-outlined-text-field-outline-color: #64748b; /* border color of mat-form-field */
+  --mdc-outlined-text-field-hover-outline-color: white !important; /* border color on hover of mat-form-field */
+  --mdc-outlined-text-field-outline-width: 2px;
+  --mdc-outlined-text-field-focus-outline-color: #60a5fa; /* focus:outline */
+  --mdc-outlined-text-field-input-text-placeholder-color: white;
+  --mat-select-panel-background-color: #1e293b !important;
+  --mat-select-placeholder-text-color: #e2e8f0 !important;
+  --mat-option-label-text-color: white !important;
+  --mat-option-hover-state-layer-color: #94a3b8 !important;
+  --mdc-chip-label-text-color: white !important;
+  --mdc-chip-with-trailing-icon-trailing-icon-color: white !important;
+  --mat-expansion-container-background-color: #475569 !important;
+  --mdc-dialog-subhead-color: white !important;
+  --mdc-text-button-label-text-color: white !important;
+  --mdc-dialog-container-color: #111827;
+}
+.dark [class*="mat-"] {
+  /* mat checkbox */
+  --mdc-checkbox-selected-pressed-icon-color: #64748b !important;
+  --mdc-checkbox-selected-checkmark-color: white;
+  --mdc-checkbox-selected-focus-icon-color: #64748b !important;
+  --mdc-checkbox-selected-hover-icon-color: #64748b !important;
+  --mdc-checkbox-selected-icon-color: #64748b !important;
+  --mdc-checkbox-selected-focus-state-layer-color: #64748b !important;
+  --mdc-checkbox-selected-hover-state-layer-color: #64748b !important;
+  --mdc-checkbox-unselected-pressed-state-layer-color: red !important;
+  --mat-checkbox-disabled-label-color: rgba(224, 227, 226, 0.38) !important;
+  --mat-checkbox-label-text-color: white !important;
+}
+
+// .mat-accent.mat-mdc-checkbox {
+//   --mdc-checkbox-selected-pressed-icon-color: #ffb787;
+//   --mdc-checkbox-selected-checkmark-color: #502400;
+//   --mdc-checkbox-selected-focus-icon-color: #ffb787;
+//   --mdc-checkbox-selected-hover-icon-color: #ffb787;
+//   --mdc-checkbox-selected-icon-color: #ffb787;
+//   --mdc-checkbox-selected-focus-state-layer-color: #ffb787;
+//   --mdc-checkbox-selected-hover-state-layer-color: #ffb787;
+//   --mdc-checkbox-unselected-pressed-state-layer-color: #ffb787;
+//   --mat-checkbox-disabled-label-color: rgba(224, 227, 226, 0.38);
+//   --mat-checkbox-label-text-color: #e0e3e2;
+// }
+
+.ql-toolbar.ql-snow {
+  @apply border-2 border-b-0 border-slate-500;
+}
+.ql-toolbar {
+  @apply rounded-tl-md rounded-tr-md bg-slate-600 border-4 border-b-0;
+}
+
+.ql-container.ql-snow {
+  @apply border-0;
+  @apply bg-slate-600 border-0;
+}
+.ql-container {
+  @apply border-0;
+  // @apply outline-2 outline-white;
+  // outline: 2px solid white; /* Change the color and width of the outline */
+  // outline-offset: -2px;
+}
+// .ql-container:focus {
+//   outline: 2px solid #60a5fa; /* Change the color and width of the outline */
+// }
+
+.ql-editor {
+  // @apply bg-slate-600 border-2 outline-4 outline-green-600 border-t-2 border-slate-500 rounded-b-md p-1 hover:border-white hover:border-t-2 focus:outline-blue-400;
+  // @apply text-base;
+}
+.ql-editor:hover {
+  outline: 2px solid white !important;
+  outline-offset: -2px;
+}
+.ql-editor:focus {
+  outline: solid #60a5fa !important;
+  outline-offset: -2px;
+}
+.ql-editor.ql-blank::before {
+  @apply text-white italic opacity-60 text-base; /* placeholder color */
+}
+
+// div [class*="ql-editor"]{
+//   outline: solid green !important;
+// }
+
+.ql-editor.ql-blank {
+  @apply border-2 border-slate-500 rounded-b-md hover:outline-white;
+  // outline: solid green;
+}
+
+.ql-snow .ql-stroke {
+  @apply stroke-white;
+  // @apply stroke-white focus:outline-none;
+}
+.ql-snow .ql-fill {
+  @apply fill-white;
+}
+.ql-snow * {
+  @apply text-white;
+}
+
+.ql-snow.ql-toolbar button:hover .ql-stroke,
+.ql-snow .ql-toolbar button:hover .ql-stroke,
+.ql-snow.ql-toolbar button:focus .ql-stroke,
+.ql-snow .ql-toolbar button:focus .ql-stroke,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-snow.ql-toolbar button:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar button:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar button:focus .ql-stroke-miter,
+.ql-snow .ql-toolbar button:focus .ql-stroke-miter,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
+  @apply stroke-blue-400;
+}
+.ql-snow.ql-toolbar button:hover,
+.ql-snow .ql-toolbar button:hover,
+.ql-snow.ql-toolbar button:focus,
+.ql-snow .ql-toolbar button:focus,
+.ql-snow.ql-toolbar button.ql-active,
+.ql-snow .ql-toolbar button.ql-active,
+.ql-snow.ql-toolbar .ql-picker-label:hover,
+.ql-snow .ql-toolbar .ql-picker-label:hover,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker-item:hover,
+.ql-snow .ql-toolbar .ql-picker-item:hover,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  @apply text-blue-400;
+}
+
+.ql-snow.ql-toolbar button:hover .ql-fill,
+.ql-snow .ql-toolbar button:hover .ql-fill,
+.ql-snow.ql-toolbar button:focus .ql-fill,
+.ql-snow .ql-toolbar button:focus .ql-fill,
+.ql-snow.ql-toolbar button.ql-active .ql-fill,
+.ql-snow .ql-toolbar button.ql-active .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar button:focus .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar button:focus .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
+  @apply fill-blue-400;
+}
+
+.ql-snow .ql-picker-options {
+  @apply bg-slate-600 border-2 border-red-500;
+}
+
+
+
+
+
+
+$light-palette: _patch-error-palette(
+  (
+    0: #000000,
+    5: #001419,
+    10: #001f26,
+    15: #002a33,
+    20: #003640,
+    25: #00424e,
+    30: #004e5c,
+    35: #005b6b,
+    40: #00687a,
+    50: #008399,
+    60: #009eb9,
+    70: #3bbad5,
+    80: #5ed6f2,
+    90: #abedff,
+    95: #d8f6ff,
+    98: #f0fbff,
+    99: #f8fdff,
+    100: #ffffff,
+    secondary: (
+      0: #000000,
+      5: #001419,
+      10: #071e24,
+      15: #13292e,
+      20: #1e3439,
+      25: #293f45,
+      30: #344a50,
+      35: #40565c,
+      40: #4c6268,
+      50: #647b81,
+      60: #7e949b,
+      70: #98afb6,
+      80: #b3cad2,
+      90: #cfe7ee,
+      95: #ddf5fc,
+      98: #f0fbff,
+      99: #f8fdff,
+      100: #ffffff,
+    ),
+    tertiary: (
+      0: #000000,
+      5: #080f2a,
+      10: #131a36,
+      15: #1e2440,
+      20: #292f4c,
+      25: #343a57,
+      30: #3f4563,
+      35: #4b5170,
+      40: #575d7c,
+      50: #707596,
+      60: #898fb1,
+      70: #a4a9cd,
+      80: #bfc4e9,
+      90: #dde1ff,
+      95: #f0efff,
+      98: #fbf8ff,
+      99: #fefbff,
+      100: #ffffff,
+    ),
+    neutral: (
+      0: #000000,
+      5: #0e1112,
+      10: #191c1d,
+      15: #232627,
+      20: #2e3132,
+      25: #393c3d,
+      30: #444748,
+      35: #505354,
+      40: #5c5f60,
+      50: #757778,
+      60: #8f9192,
+      70: #a9abac,
+      80: #c5c7c8,
+      90: #e1e3e4,
+      95: #eff1f2,
+      98: #f8f9fa,
+      99: #fbfcfd,
+      100: #ffffff,
+    ),
+    neutral-variant: (
+      0: #000000,
+      5: #0a1214,
+      10: #151d1f,
+      15: #1f2729,
+      20: #2a3234,
+      25: #343d3f,
+      30: #40484b,
+      35: #4b5456,
+      40: #576062,
+      50: #70787b,
+      60: #8a9295,
+      70: #a4adb0,
+      80: #bfc8cb,
+      90: #dbe4e7,
+      95: #eaf2f5,
+      98: #f2fbfe,
+      99: #f8fdff,
+      100: #ffffff,
+    )
+  )
+);

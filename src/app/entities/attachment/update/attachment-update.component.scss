@@ -1,0 +1,198 @@
+#toggle {
+  -webkit-appearance: none;
+}
+#toggle:checked ~ .button .icon:before {
+  transform: rotate(90deg);
+}
+#toggle:checked ~ .button .icon:after {
+  transform: rotate(0deg);
+}
+#toggle:checked ~ label .nav {
+  display: none;
+  opacity: 0;
+  transform: translateX(0);
+}
+#toggle:checked ~ .button {
+  width: 70px;
+  transition: width 250ms linear;
+}
+
+.button {
+  padding: 0 24px;
+  overflow: hidden;
+  transition: width 300ms linear;
+}
+.icon {
+  &:before {
+    content: "";
+    @apply bg-blue-800 dark:bg-blue-400;
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    transform: rotate(225deg);
+    transition: all 0.4s ease;
+  }
+  &:after {
+    content: "";
+    @apply bg-blue-800 dark:bg-blue-400;
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    transform: rotate(135deg);
+    transition: all 0.4s ease;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    width: 100%;
+  }
+}
+
+.nav {
+  transition: all 0.5s ease-in-out;
+  transform: translateX(10%);
+  li {
+    &:nth-child(1) {
+      transform-origin: bottom;
+      animation: enter 300ms 300ms linear forwards;
+    }
+    &:nth-child(2) {
+      transform-origin: bottom;
+      animation: enter 300ms 400ms linear forwards;
+    }
+    &:nth-child(3) {
+      transform-origin: bottom;
+      animation: enter 300ms 500ms linear forwards;
+    }
+    &:nth-child(4) {
+      transform-origin: bottom;
+      animation: enter 300ms 600ms linear forwards;
+    }
+  }
+  a {
+    transition: all 0.5s linear;
+    text-decoration: none;
+  }
+}
+
+@keyframes enter {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accordion Menu */
+
+.accordion-menu {
+  // display: inline-block;
+  // position: relative;
+  // perspective: 900;
+  // border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2),
+    0 2px 2px 0 rgba(255, 255, 255, 0.19);
+  .header {
+    .title {
+      display: block;
+      margin: 0;
+      cursor: pointer;
+    }
+  }
+}
+
+.accordion-menu .accordion-item:nth-child(1) {
+  border: none;
+}
+.accordion-menu .accordion-item .arrow {
+  position: absolute;
+  transform: translate(-6px, 0);
+  margin-top: 16px;
+  right: 0;
+}
+.accordion-menu .accordion-item .arrow:before,
+.accordion-menu .accordion-item .arrow:after {
+  content: "";
+  @apply absolute w-1 h-2 bg-white;
+}
+.accordion-menu .accordion-item .arrow:before {
+  transform: translate(-2px, 0) rotate(45deg);
+}
+.accordion-menu .accordion-item .arrow:after {
+  transform: translate(2px, 0) rotate(-45deg);
+}
+.accordion-menu .accordion-item input[type="checkbox"] {
+  position: absolute;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+}
+.accordion-menu .accordion-item .fa-chevron-up {
+  transition: all 500ms linear;
+}
+.accordion-menu .accordion-item input[type="checkbox"] ~ div .title {
+  opacity: 0;
+}
+.accordion-menu .accordion-item input[type="checkbox"]:checked ~ div .title {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+.accordion-menu
+  .accordion-item
+  input[type="checkbox"]:checked
+  ~ div
+  .fa-chevron-up {
+  transform: rotateX(180deg);
+}
+.accordion-menu .accordion-item input[type="checkbox"]:checked ~ .body {
+  margin-top: 0;
+  max-height: 0;
+  opacity: 0;
+  transform: translate(0, 50%);
+}
+.accordion-menu .accordion-item input[type="checkbox"]:checked ~ .arrow:before {
+  transform: translate(2px, 0) rotate(45deg);
+}
+.accordion-menu .accordion-item input[type="checkbox"]:checked ~ .arrow:after {
+  transform: translate(-2px, 0) rotate(-45deg);
+}
+.body,
+.accordion-menu .accordion-item .arrow:before,
+.accordion-menu .accordion-item .arrow:after {
+  transition: all 0.25s ease-in-out;
+}
+
+.accordion-menu .accordion-item {
+  animation: flipdown 0.5s ease both;
+}
+@keyframes flipdown {
+  0% {
+    opacity: 0;
+    transform-origin: top center;
+    transform: rotateX(-90deg);
+  }
+  5% {
+    opacity: 1;
+  }
+  80% {
+    transform: rotateX(8deg);
+  }
+  83% {
+    transform: rotateX(6deg);
+  }
+  92% {
+    transform: rotateX(-3deg);
+  }
+  100% {
+    transform-origin: top center;
+    transform: rotateX(0deg);
+  }
+}
+
+// VOICE_RECORDED PLAYER

@@ -1,0 +1,238 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+// Adds the error colors to the given palette.
+@function _patch-error-palette($palette) {
+  @return map.merge(
+    $palette,
+    (
+      error: (
+        0: #000000,
+        20: #690005,
+        25: #7e0007,
+        30: #93000a,
+        35: #a80710,
+        40: #ba1a1a,
+        50: #de3730,
+        60: #ff5449,
+        70: #ff897d,
+        80: #ffb4ab,
+        90: #ffdad6,
+        95: #ffedea,
+        98: #fff8f7,
+        99: #fffbff,
+        100: red,
+      ),
+    )
+  );
+}
+
+$light-palette: _patch-error-palette(
+  (
+    /* on fucus (outline, label text, etc.) */ 0: red,
+    10: red,
+    20: red,
+    25: red,
+    30: red,
+    35: red,
+    40: red,
+    50: red,
+    60: red,
+    70: red,
+    80: red,
+    90: red,
+    95: red,
+    98: red,
+    99: red,
+    100: red,
+    secondary: (
+      0: green,
+      10: green,
+      20: green,
+      25: green,
+      30: green,
+      35: green,
+      40: green,
+      50: green,
+      60: green,
+      70: green,
+      80: green,
+      90: green,
+      95: green,
+      98: green,
+      99: green,
+      100: green,
+    ),
+    neutral: (
+      /* form field (input, select, etc.), backgrou*/
+        /* on hover form field (input, select, etc.)*/ 0: yellow,
+      10: yellow,
+      20: yellow,
+      25: yellow,
+      30: yellow,
+      35: yellow,
+      40: yellow,
+      50: yellow,
+      60: yellow,
+      70: yellow,
+      80: yellow,
+      90: yellow,
+      95: yellow,
+      98: yellow,
+      99: yellow,
+      100: yellow,
+      /* background of dialog, expandable, etc. */ 4: #ff009d,
+      6: #ff009d,
+      12: #ff009d,
+      17: #ff009d,
+      22: #ff009d,
+      24: #ff009d,
+      87: #ff009d,
+      92: #ff009d,
+      94: #ff009d,
+      96: #ff009d
+    ),
+    neutral-variant: (
+      /* outline, label text, etc. */ 0: cyan,
+      10: cyan,
+      20: cyan,
+      25: cyan,
+      30: cyan,
+      35: cyan,
+      40: cyan,
+      50: cyan,
+      60: cyan,
+      70: cyan,
+      80: cyan,
+      90: cyan,
+      95: cyan,
+      98: cyan,
+      99: cyan,
+      100: cyan
+    )
+  )
+);
+$light-palette: map.merge(mat.$azure-palette, $light-palette);
+
+$dark-palette: _patch-error-palette(
+  (
+    0: #000000,
+    10: #001f26,
+    20: #003640,
+    25: #00424e,
+    30: #004e5c,
+    35: #005b6b,
+    40: #00687a,
+    50: #008399,
+    60: #009eb9,
+    70: #3bbad5,
+    80: #5ed6f2,
+    90: #abedff,
+    95: #d8f6ff,
+    98: #f0fbff,
+    99: #f8fdff,
+    100: #ffffff,
+    secondary: (
+      0: #000000,
+      10: #071e24,
+      20: #1e3439,
+      25: #293f45,
+      30: #344a50,
+      35: #40565c,
+      40: #4c6268,
+      50: #647b81,
+      60: #7e949b,
+      70: #98afb6,
+      80: #b3cad2,
+      90: #cfe7ee,
+      95: #ddf5fc,
+      98: #f0fbff,
+      99: #f8fdff,
+      100: #ffffff,
+    ),
+    neutral: (
+      0: #000000,
+      10: #191c1d,
+      /* background color of bottom-sheet */ 20: #2e3132,
+      25: #393c3d,
+      30: #444748,
+      35: #505354,
+      40: #5c5f60,
+      50: #757778,
+      60: #8f9192,
+      70: #a9abac,
+      80: #c5c7c8,
+      90: #e1e3e4,
+      95: #eff1f2,
+      98: #f8f9fa,
+      99: #fbfcfd,
+      100: #ffffff,
+      4: #0b0f0e,
+      6: #0f172a, // background color of expandable, card
+      12: #0f172a, // background color of select options
+      17: #272b2a,
+      22: #313635,
+      24: #363a39,
+      87: #d7dbd9,
+      92: #e6e9e7,
+      94: #ebefed,
+      96: #f1f4f3,
+    ),
+    neutral-variant: (
+      0: #000000,
+      10: #151d1f,
+      20: #2a3234,
+      25: #343d3f,
+      30: #40484b,
+      35: #4b5456,
+      40: #576062,
+      50: #70787b,
+      60: #8a9295,
+      70: #a4adb0,
+      80: #bfc8cb,
+      90: #dbe4e7,
+      95: #eaf2f5,
+      98: #f2fbfe,
+      99: #f8fdff,
+      100: #ffffff,
+    ),
+  )
+);
+
+:root {
+  @apply bg-slate-900;
+}
+
+// Define a dark theme
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: $dark-palette,
+      // primary: mat.$blue-palette,
+    ),
+    // typography: mat.define-typography-config(),
+    // density: 0,,,,,
+  )
+);
+
+// Define a light theme
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+    ),
+    // typography: mat.define-typography-config(),
+    // density: 0,,,,,
+  )
+);
+
+:root {
+  @include mat.all-component-themes($light-theme);
+}
+.dark {
+  @include mat.all-component-colors($dark-theme);
+}

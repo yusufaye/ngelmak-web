@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (ngelmakAccount()) {
+      <div>
+        <h2 data-cy="ngelmakAccountDetailsHeading">
+          <span >Ngelmak Account</span>
+        </h2>
+
+        <hr />
+
+        <app-alert-error></app-alert-error>
+
+        <app-alert></app-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span >ID</span></dt>
+          <dd>
+            <span>{{ ngelmakAccount()!.id }}</span>
+          </dd>
+          <dt><span >Name</span></dt>
+          <dd>
+            <span>{{ ngelmakAccount()!.name }}</span>
+          </dd>
+          <dt><span >Foreground Picture</span></dt>
+          <dd>
+            <span>{{ ngelmakAccount()!.foregroundPicture }}</span>
+          </dd>
+          <dt><span >Background Picture</span></dt>
+          <dd>
+            <span>{{ ngelmakAccount()!.backgroundPicture }}</span>
+          </dd>
+          <dt><span >Visibility</span></dt>
+          <dd>
+            <span >{{
+              { null: '', DEFAULT: 'DEFAULT', PUBLIC: 'PUBLIC', PRIVATE: 'PRIVATE', AUTHORITY: 'AUTHORITY', JURNALIST: 'JURNALIST' }[
+                ngelmakAccount()!.visibility ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span >Created At</span></dt>
+          <dd>
+            <span>{{ ngelmakAccount()!.createdAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span >Configuration</span></dt>
+          <dd>
+            @if (ngelmakAccount()!.configuration) {
+              <div>
+                <a [routerLink]="['/config', ngelmakAccount()!.configuration?.id, 'view']">{{ ngelmakAccount()!.configuration?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span >User</span></dt>
+          <dd>
+            <span>{{ ngelmakAccount()!.user?.id }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <span icon="arrow-left"></span>&nbsp;<span >Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/ngelmak-account', ngelmakAccount()!.id, 'edit']" class="btn btn-primary">
+          <span icon="pencil-alt"></span>&nbsp;<span >Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

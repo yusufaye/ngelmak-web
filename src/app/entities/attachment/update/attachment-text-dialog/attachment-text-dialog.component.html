@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Document de texte</h2>
+<mat-dialog-content class="w-full">
+  <div class="w-full">
+    <quill-editor
+      class="w-full"
+      [(ngModel)]="content"
+      placeholder="Tapez ici votre résumé"
+      [modules]="quillConfiguration"
+    >
+    </quill-editor>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="flex gap-2">
+  <button
+    mat-dialog-close
+    class="text-md text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 hover:dark:bg-gray-700 dark:text-red-400 focus:border-white focus:border-2 px-4 py-2"
+    type="button"
+    cdkFocusInitial
+  >
+    Annuler
+  </button>
+  <button
+    (click)="save()"
+    class="text-md text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 hover:dark:bg-gray-700 dark:text-blue-400 px-4 py-2"
+    type="button"
+  >
+    Enregistrer
+  </button>
+</mat-dialog-actions>

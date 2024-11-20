@@ -1,0 +1,217 @@
+<div
+  class="bg-white dark:bg-slate-800 box-border mx-4 sm:columns-1 rounded-xl overflow-hidden"
+  *ngIf="post"
+>
+  <!-- card-->
+  <div class="flex flex-col gap-4 mb-4 p-6">
+    <div class="flex flex-row justify-between pb-6">
+      <div class="flex">
+        <a class="inline-block mr-4" href="#">
+          <img
+            class="rounded-full max-w-none w-12 h-12"
+            src="https://randomuser.me/api/portraits/men/35.jpg"
+          />
+        </a>
+        <div class="flex flex-col">
+          <div>
+            <a class="inline-block text-lg font-bold dark:text-white" href="#"
+              >[Account name]</a
+            >
+          </div>
+          <div class="text-slate-500 dark:text-slate-400">
+            {{ post.at }}
+          </div>
+        </div>
+      </div>
+      <div class="cursor-pointer" matTooltip="Fermer" (click)="previousState()">
+        <i class="fa-solid fa-xmark dark:text-rose-600 text-2xl"></i>
+      </div>
+    </div>
+    <h2 class="text-3xl font-extrabold dark:text-white">
+      {{ post.title }}
+    </h2>
+
+    <!-- content of the post -->
+    <div
+      class="dark:text-slate-200 max-h-screen overflow-y-scroll"
+      [innerHTML]="post.content"
+    ></div>
+    <!-- end content of the post -->
+
+    <!-- joint pieces -->
+    <div class="flex flex-col gap-2 mt-4 rounded-xl overflow-hidden">
+      <div
+        plyr
+        plyrTitle="Video 1"
+        [plyrPlaysInline]="true"
+        [plyrSources]="videoSources"
+        (plyrInit)="player = $event"
+        (plyrPlay)="played($event)"
+      ></div>
+      <div>
+        <img
+          class="w-full"
+          src="https://images.pexels.com/photos/92866/pexels-photo-92866.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+        />
+      </div>
+      <div>
+        <img
+          class="max-w-full"
+          src="https://images.pexels.com/photos/247929/pexels-photo-247929.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+        />
+      </div>
+      <div>
+        <img
+          class="max-w-full"
+          src="https://images.pexels.com/photos/631522/pexels-photo-631522.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+        />
+      </div>
+      <div>
+        <img
+          class="max-w-full"
+          src="https://images.pexels.com/photos/1429748/pexels-photo-1429748.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+        />
+      </div>
+      <div>
+        <img
+          class="max-w-full"
+          src="https://images.pexels.com/photos/69020/pexels-photo-69020.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+        />
+      </div>
+    </div>
+    <!-- end joint pieces -->
+
+    <div class="py-4">
+      <a class="inline-flex gap-2 items-center" href="#">
+        <i
+          class="fa-solid fa-envelope text-rose-600 dark:text-rose-400 text-xl"
+        ></i>
+        <span class="text-lg font-bold text-blue-500 dark:text-slate-50"
+          >34</span
+        >
+      </a>
+    </div>
+    <div class="relative">
+      <form
+        name="editForm"
+        class="flex flex-col gap-2"
+        novalidate
+        (ngSubmit)="save()"
+        [formGroup]="editForm"
+      >
+        <div>
+          <quill-editor
+            class="w-full h-20 !border-blue-500 text-white rounded-md focus:outline-none"
+            formControlName="comment"
+            placeholder="Tapez ici votre résumé"
+            [modules]="quillConfiguration"
+            [classes]="'text-white text-xl focus:outline-none'"
+          >
+          </quill-editor>
+        </div>
+        <div class="flex gap-2 right-3-mt-3 items-center">
+          <span class="font-bold text-blue-500 dark:text-slate-50">
+            Envoyer
+
+          </span>
+          <svg
+            class="fill-blue-500 dark:fill-slate-50"
+            style="width: 24px; height: 24px"
+            viewBox="0 0 24 24"
+          >
+            <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"></path>
+          </svg>
+        </div>
+      </form>
+    </div>
+    <!-- Comments content -->
+    <div class="pt-6">
+      <!-- Comment row -->
+      <div class="media flex pb-4">
+        <a class="mr-4" href="#">
+          <img
+            class="rounded-full max-w-none w-12 h-12"
+            src="https://randomuser.me/api/portraits/men/82.jpg"
+          />
+        </a>
+        <div class="media-body">
+          <div>
+            <a class="inline-block text-base font-bold mr-2" href="#"
+              >Leslie Alexander</a
+            >
+            <span class="text-slate-500 dark:text-slate-300"
+              >25 minutes ago</span
+            >
+          </div>
+          <p>Lorem ipsum dolor sit amet, consectetur.</p>
+          <div class="mt-2 flex items-center">
+            <a class="inline-flex items-center py-2 mr-3" href="#">
+              <span class="mr-2">
+                <svg
+                  class="fill-rose-600 dark:fill-rose-400"
+                  style="width: 22px; height: 22px"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
+                  ></path>
+                </svg>
+              </span>
+              <span class="text-base font-bold">12</span>
+            </a>
+            <button
+              class="py-2 px-4 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg"
+            >
+              Repply
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- End comments row -->
+      <!-- comments row -->
+      <div class="media flex pb-4">
+        <a class="inline-block mr-4" href="#">
+          <img
+            class="rounded-full max-w-none w-12 h-12"
+            src="https://randomuser.me/api/portraits/women/76.jpg"
+          />
+        </a>
+        <div class="media-body">
+          <div>
+            <a class="inline-block text-base font-bold mr-2" href="#"
+              >Tina Mills</a
+            >
+            <span class="text-slate-500 dark:text-slate-300"
+              >3 minutes ago</span
+            >
+          </div>
+          <p>Dolor sit ameteiusmod consectetur adipiscing elit.</p>
+          <div class="mt-2 flex items-center">
+            <a class="inline-flex items-center py-2 mr-3" href="#">
+              <span class="mr-2">
+                <svg
+                  class="fill-rose-600 dark:fill-rose-400"
+                  style="width: 22px; height: 22px"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12.1 18.55L12 18.65L11.89 18.55C7.14 14.24 4 11.39 4 8.5C4 6.5 5.5 5 7.5 5C9.04 5 10.54 6 11.07 7.36H12.93C13.46 6 14.96 5 16.5 5C18.5 5 20 6.5 20 8.5C20 11.39 16.86 14.24 12.1 18.55M16.5 3C14.76 3 13.09 3.81 12 5.08C10.91 3.81 9.24 3 7.5 3C4.42 3 2 5.41 2 8.5C2 12.27 5.4 15.36 10.55 20.03L12 21.35L13.45 20.03C18.6 15.36 22 12.27 22 8.5C22 5.41 19.58 3 16.5 3Z"
+                  ></path>
+                </svg>
+              </span>
+              <span class="text-base font-bold">0</span>
+            </a>
+            <button
+              class="py-2 px-4 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg"
+            >
+              Repply
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- End comments row -->
+    </div>
+    <!-- End Comments content -->
+  </div>
+  <!-- end card -->
+</div>
