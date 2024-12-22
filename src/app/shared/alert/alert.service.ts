@@ -1,39 +1,39 @@
-import { inject, Injectable, SecurityContext } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { inject, Injectable, SecurityContext } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 
-export type AlertType = 'success' | 'danger' | 'warning' | 'info';
+export type AlertType = "success" | "error" | "warning" | "info";
 
-export interface Alert {
+export interface IAlert {
   id?: number;
   type: AlertType;
   message?: string;
   translationKey?: string;
   translationParams?: { [key: string]: unknown };
   timeout?: number;
-  toast?: boolean;
-  position?: string;
-  close?: (alerts: Alert[]) => void;
+  showIcon?: boolean;
+  showCloseButton?: boolean;
+  autoclose?: boolean;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AlertService {
-  timeout = 5000;
-  toast = false;
-  position = 'top right';
+  private timeout = 5000;
+  private showIcon = true;
+  private showCloseButton = true;
+  private autoclose = true;
+
 
   // unique id for each alert. Starts from 0.
   private alertId = 0;
-  private alerts: Alert[] = [];
-
-  private sanitizer = inject(DomSanitizer);
+  private alerts: IAlert[] = [];
 
   clear(): void {
     this.alerts = [];
   }
 
-  get(): Alert[] {
+  get(): IAlert[] {
     return this.alerts;
   }
 
@@ -45,7 +45,7 @@ export class AlertService {
    *                   Else adding `alert` to `extAlerts`.
    * @returns  Added alert
    */
-  addAlert(alert: Alert, extAlerts?: Alert[]): Alert {
+  addAlert(alert: IAlert): IAlert {
     alert.id = this.alertId++;
 
     // if (alert.translationKey) {
@@ -58,29 +58,28 @@ export class AlertService {
     //   }
     // }
 
-    alert.message = this.sanitizer.sanitize(SecurityContext.HTML, alert.message ?? '') ?? '';
+    alert.message = alert.message ?? "";
     alert.timeout = alert.timeout ?? this.timeout;
-    alert.toast = alert.toast ?? this.toast;
-    alert.position = alert.position ?? this.position;
-    alert.close = (alertsArray: Alert[]) => this.closeAlert(alert.id!, alertsArray);
+    alert.showIcon = alert.showIcon ?? this.showIcon;
+    alert.showCloseButton = alert.showCloseButton ?? this.showCloseButton;
+    alert.autoclose = alert.autoclose ?? this.autoclose;
 
-    (extAlerts ?? this.alerts).push(alert);
+    this.alerts.push(alert);
 
     if (alert.timeout > 0) {
       setTimeout(() => {
-        this.closeAlert(alert.id!, extAlerts ?? this.alerts);
+        this.closeAlert(alert.id!);
       }, alert.timeout);
     }
 
     return alert;
   }
 
-  private closeAlert(alertId: number, extAlerts?: Alert[]): void {
-    const alerts = extAlerts ?? this.alerts;
-    const alertIndex = alerts.map(alert => alert.id).indexOf(alertId);
+  closeAlert(alertId: number): void {
+    const alertIndex = this.alerts.map((alert) => alert.id).indexOf(alertId);
     // if found alert then remove
     if (alertIndex >= 0) {
-      alerts.splice(alertIndex, 1);
+      this.alerts.splice(alertIndex, 1);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,7 +12,15 @@ import SharedModule from 'app/shared/shared.module';
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [PasswordStrengthBarComponent, SharedModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    RouterModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PasswordStrengthBarComponent,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './sign-up.component.html',
 })
 export class SignUpComponent {

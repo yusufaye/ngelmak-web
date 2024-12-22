@@ -1,36 +1,17 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { AlertService, Alert } from 'app/core/util/alert.service';
+import { CommonModule } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { scaleInOutAnimation200ms } from "../animations/stagger.animation";
+import { fadeInUp400ms } from "../animations/fade-in-up.animation";
+import { AlertService } from "./alert.service";
 
 @Component({
+  selector: "app-alert",
   standalone: true,
-  selector: 'app-alert',
-  templateUrl: './alert.component.html',
   imports: [CommonModule],
+  templateUrl: "./alert.component.html",
+  styleUrl: "./alert.component.scss",
+  animations: [scaleInOutAnimation200ms, fadeInUp400ms],
 })
-export class AlertComponent implements OnInit, OnDestroy {
-  alerts = signal<Alert[]>([]);
-
-  private alertService = inject(AlertService);
-
-  ngOnInit(): void {
-    this.alerts.set(this.alertService.get());
-  }
-
-  setClasses(alert: Alert): { [key: string]: boolean } {
-    const classes = { 'app-toast': Boolean(alert.toast) };
-    if (alert.position) {
-      return { ...classes, [alert.position]: true };
-    }
-    return classes;
-  }
-
-  ngOnDestroy(): void {
-    this.alertService.clear();
-  }
-
-  close(alert: Alert): void {
-    alert.close?.(this.alerts());
-  }
+export class AlertComponent {
+  alertService = inject(AlertService);
 }

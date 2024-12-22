@@ -44,6 +44,10 @@ export class NgelmakAccountService implements IHttpRestApiService<INgelmakAccoun
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
+  findByUser(id: number): Observable<EntityResponseType> {
+    return this.http.get<INgelmakAccount>(`${this.resourceUrl}/user/${id}`, { observe: 'response' });
+  }
+
   findByCurrentUser(): Observable<EntityResponseType> {
     return this.http.get<INgelmakAccount>(`${this.resourceUrl}/current-user`, { observe: 'response' });
   }

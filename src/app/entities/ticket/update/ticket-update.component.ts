@@ -7,7 +7,6 @@ import { finalize, map } from 'rxjs/operators';
 import SharedModule from 'app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AlertError } from 'app/shared/alert/alert-error.model';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { IPost } from 'app/entities/post/post.model';
@@ -20,6 +19,7 @@ import { TicketType } from 'app/entities/enumerations/ticket-type.model';
 import { TicketService } from '../service/ticket.service';
 import { ITicket } from '../ticket.model';
 import { TicketFormService, TicketFormGroup } from './ticket-form.service';
+import { IAlert } from 'app/shared/alert/alert.service';
 
 @Component({
   standalone: true,
@@ -77,7 +77,7 @@ export class TicketUpdateComponent implements OnInit {
   setFileData(event: Event, field: string, isImage: boolean): void {
     this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
       error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<AlertError>('ngelmakprojectApp.error', { ...err, key: 'error.file.' + err.key })),
+        this.eventManager.broadcast(new EventWithContent<IAlert>('ngelmakprojectApp.error', {type: "error"})),
     });
   }
 

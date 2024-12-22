@@ -12,7 +12,7 @@ import { AccountService } from 'app/core/auth/account.service';
 import { UserManagementService } from '../service/user-management.service';
 import { User } from '../user-management.model';
 import UserManagementDeleteDialogComponent from '../delete/user-management-delete-dialog.component';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   standalone: true,
@@ -25,7 +25,7 @@ import { MatMenuModule } from '@angular/material/menu';
     SortDirective,
     SortByDirective,
     ItemCountComponent,
-    MatMenuModule,
+    MatTooltipModule,
   ],
 })
 export default class UserManagementComponent implements OnInit {

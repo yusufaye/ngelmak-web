@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { AlertService } from 'app/core/util/alert.service';
+import { AlertService } from 'app/shared/alert/alert.service';
 
 @Injectable()
 export class NotificationInterceptor implements HttpInterceptor {

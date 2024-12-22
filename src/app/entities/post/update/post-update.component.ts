@@ -1,34 +1,43 @@
-import { IPost } from 'app/entities/post/post.model';
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { IPost } from "app/entities/post/post.model";
+import { Component, inject, OnInit, ViewEncapsulation } from "@angular/core";
+import { HttpResponse } from "@angular/common/http";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Observable } from "rxjs";
+import { finalize } from "rxjs/operators";
 
-import SharedModule from 'app/shared/shared.module';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import SharedModule from "app/shared/shared.module";
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 
-import { AlertError } from 'app/shared/alert/alert-error.model';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
-import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-import { INgelmakAccount } from 'app/entities/ngelmak-account/ngelmak-account.model';
-import { NgelmakAccountService } from 'app/entities/ngelmak-account/ngelmak-account.service';
-import { Subject } from 'app/entities/enumerations/subject.model';
-import { Visibility } from 'app/entities/enumerations/visibility.model';
-import { Status } from 'app/entities/enumerations/status.model';
-import { PostService } from '../post.service';
-import { MatInputModule } from '@angular/material/input';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { AttachmentUpdateComponent } from 'app/entities/attachment/update/attachment-update.component';
-import { IAttachment } from 'app/entities/attachment/attachment.model';
+import {
+  EventManager,
+  EventWithContent,
+} from "app/core/util/event-manager.service";
+import { DataUtils, FileLoadError } from "app/core/util/data-util.service";
+import { INgelmakAccount } from "app/entities/ngelmak-account/ngelmak-account.model";
+import { NgelmakAccountService } from "app/entities/ngelmak-account/ngelmak-account.service";
+import { Subject } from "app/entities/enumerations/subject.model";
+import { Visibility } from "app/entities/enumerations/visibility.model";
+import { Status } from "app/entities/enumerations/status.model";
+import { PostService } from "../post.service";
+import { MatInputModule } from "@angular/material/input";
+import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSelectModule } from "@angular/material/select";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { AttachmentUpdateComponent } from "app/entities/attachment/update/attachment-update.component";
+import { IAttachment } from "app/entities/attachment/attachment.model";
+import { IAlert } from "app/shared/alert/alert.service";
 
 @Component({
   standalone: true,
-  selector: 'app-post-update',
-  templateUrl: './post-update.component.html',
+  selector: "app-post-update",
+  templateUrl: "./post-update.component.html",
   imports: [
     SharedModule,
     FormsModule,
@@ -40,7 +49,7 @@ import { IAttachment } from 'app/entities/attachment/attachment.model';
     MatSelectModule,
     MatFormFieldModule,
   ],
-  encapsulation: ViewEncapsulation.None,  // Disable encapsulation
+  encapsulation: ViewEncapsulation.None, // Disable encapsulation
 })
 export class PostUpdateComponent implements OnInit {
   private dataUtils = inject(DataUtils);
@@ -57,16 +66,16 @@ export class PostUpdateComponent implements OnInit {
   protected subjectValues = Object.keys(Subject);
   protected visibilityValues = Object.keys(Visibility);
   protected statusValues = Object.keys(Status);
-  protected keywords: string[] = []
+  protected keywords: string[] = [];
 
   quillConfiguration = {
     toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ 'size': [false, 'small', 'large', 'huge'] }],  // custom dropdown
-      ['link'],
-      ['clean'],
+      ["bold", "italic", "underline", "strike"],
+      ["blockquote", "code-block"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ size: [false, "small", "large", "huge"] }], // custom dropdown
+      ["link"],
+      ["clean"],
     ],
   };
   ngelmakAccountsSharedCollection: INgelmakAccount[] = [];
@@ -80,7 +89,10 @@ export class PostUpdateComponent implements OnInit {
     at: new FormControl(null),
     lastUpdate: new FormControl(null),
     visibility: new FormControl(null),
-    content: new FormControl(null, [Validators.required, Validators.minLength(100)]),
+    content: new FormControl(null, [
+      Validators.required,
+      Validators.minLength(100),
+    ]),
     status: new FormControl(null),
     account: new FormControl(null),
   });
@@ -90,7 +102,7 @@ export class PostUpdateComponent implements OnInit {
       this.post = post;
       this.attachments = this.post?.attachments || [];
       this.postForm.patchValue(this.post);
-      this.keywords = this.post?.keywords.split(',') || [];
+      this.keywords = this.post?.keywords.split(",") || [];
       this.loadRelationshipsOptions();
     });
   }
@@ -104,36 +116,58 @@ export class PostUpdateComponent implements OnInit {
   }
 
   setFileData(event: Event, field: string, isImage: boolean): void {
-    this.dataUtils.loadFileToForm(event, this.postForm, field, isImage).subscribe({
-      error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<AlertError>('ngelmakprojectApp.error', { ...err, key: 'error.file.' + err.key })),
-    });
+    this.dataUtils
+      .loadFileToForm(event, this.postForm, field, isImage)
+      .subscribe({
+        error: (err: FileLoadError) =>
+          this.eventManager.broadcast(
+            new EventWithContent<IAlert>("ngelmakprojectApp.error", {
+              type: "error",
+            })
+          ),
+      });
   }
 
   save(): void {
     this.isSaving = true;
-    const keywords = this.keywords.reduce((previousValue: string, currentValue: string) => `${previousValue},${currentValue}`);
+    const keywords = this.keywords.reduce(
+      (previousValue: string, currentValue: string) =>
+        `${previousValue},${currentValue}`
+    );
     const post: IPost = { ...this.postForm.value, keywords };
     if (post.id !== null) {
-      const newattachments = this.attachments.filter(attachment => !attachment.id); // save only the new attachments
-      const deletedAttachments = this.deletedAttachments.map(attachment => ({ ...attachment, content: null }));
-      this.subscribeToSaveResponse(this.postService.update(post, newattachments, deletedAttachments));
+      const newattachments = this.attachments.filter(
+        (attachment) => !attachment.id
+      ); // save only the new attachments
+      const deletedAttachments = this.deletedAttachments.map((attachment) => ({
+        ...attachment,
+        content: null,
+      }));
+      this.subscribeToSaveResponse(
+        this.postService.update(post, newattachments, deletedAttachments)
+      );
     } else {
-      const newattachments = this.attachments.map(attachment => ({ ...attachment })); // copy the object
-      this.subscribeToSaveResponse(this.postService.create(post, newattachments));
+      const newattachments = this.attachments.map((attachment) => ({
+        ...attachment,
+      })); // copy the object
+      this.subscribeToSaveResponse(
+        this.postService.create(post, newattachments)
+      );
     }
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IPost>>): void {
+  protected subscribeToSaveResponse(
+    result: Observable<HttpResponse<IPost>>
+  ): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
-      complete: () => (this.isSaving = false)
+      complete: () => (this.isSaving = false),
     });
   }
 
   protected onSaveSuccess(): void {
-    this.router.navigate(['/post']);
+    this.router.navigate(["/post"]);
   }
 
   protected onSaveError(): void {
@@ -148,10 +182,11 @@ export class PostUpdateComponent implements OnInit {
     this.post = post;
     // this.postFormService.resetForm(this.postForm, post);
 
-    this.ngelmakAccountsSharedCollection = this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
-      this.ngelmakAccountsSharedCollection,
-      post.account,
-    );
+    this.ngelmakAccountsSharedCollection =
+      this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
+        this.ngelmakAccountsSharedCollection,
+        post.account
+      );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -167,9 +202,9 @@ export class PostUpdateComponent implements OnInit {
   }
 
   protected addkeyword(event: MatChipInputEvent) {
-    const keyword = (event.value || '').trim();
+    const keyword = (event.value || "").trim();
     if (keyword.length > 0) {
-      this.keywords.push('#' + keyword);
+      this.keywords.push("#" + keyword);
     }
   }
 

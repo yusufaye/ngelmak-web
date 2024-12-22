@@ -5,7 +5,6 @@ import SharedModule from 'app/shared/shared.module';
 import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
 import { DataUtils } from 'app/core/util/data-util.service';
 import { IPost } from '../post.model';
-import { PlyrModule } from '@atom-platform/ngx-plyr';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { QuillModule } from 'ngx-quill';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -24,7 +23,6 @@ import { quillConfiguration } from 'app/shared/conts/quill-editor.config';
     FormatMediumDatetimePipe,
     FormatMediumDatePipe,
     MatTooltipModule,
-    PlyrModule,
     QuillModule,
   ],
 })
@@ -43,19 +41,6 @@ export class PostDetailComponent implements OnInit {
     account: [null],
   });
 
-  // or get it from plyrInit event
-  player: Plyr | null = null;
-
-  videoSources: Plyr.Source[] = [
-    {
-      src: 'https://www.youtube.com/watch?v=H4XPqme2Qm8',
-      provider: 'youtube',
-    },
-  ];
-
-  played(event: Plyr.PlyrEvent) {
-    console.log('played', event);
-  }
 
   ngOnInit(): void {
     this.post = this.route.snapshot.data['post'];

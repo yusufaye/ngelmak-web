@@ -1,17 +1,14 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import SharedModule from './shared/shared.module';
+import { Component } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
+import { AlertComponent } from "./shared/alert/alert.component";
 
 @Component({
   standalone: true,
-  selector: 'app-root',
+  selector: "app-root",
   template: `
-  <router-outlet></router-outlet>
-  <!-- <app-alert-error></app-alert-error> -->
+    <router-outlet></router-outlet>
+    <app-alert></app-alert>
   `,
-  imports: [
-    RouterOutlet,
-    SharedModule,
-  ],
+  imports: [RouterOutlet, AlertComponent],
 })
 export class AppComponent {}

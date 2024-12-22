@@ -12,6 +12,11 @@ const entityRoutes: Routes = [
     loadChildren: () => import('./ngelmak-account/ngelmak-account.routes'),
   },
   {
+    path: 'privilege',
+    title: 'ngelmakprojectApp.privilege.home.title',
+    loadChildren: () => import('./privilege/privilege.routes'),
+  },
+  {
     path: 'config',
     title: 'ngelmakprojectApp.config.home.title',
     loadChildren: () => import('./config/config.routes'),
