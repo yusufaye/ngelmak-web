@@ -1,23 +1,21 @@
-import { AlertService } from "app/shared/alert/alert.service";
-import { Component, OnInit, inject, signal } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import {
-  FormGroup,
-  FormControl,
-  Validators,
+  FormBuilder,
   FormsModule,
   ReactiveFormsModule,
-  FormBuilder,
+  Validators
 } from "@angular/forms";
 import { Router, RouterModule } from "@angular/router";
+import { AlertService } from "app/shared/alert/alert.service";
 
-import SharedModule from "app/shared/shared.module";
-import { AccountService } from "app/core/auth/account.service";
-import { MatInputModule } from "@angular/material/input";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
 import { SignInService } from "app/authentication/sign-in/sign-in.service";
+import { AccountService } from "app/core/auth/account.service";
+import SharedModule from "app/shared/shared.module";
 
 @Component({
   standalone: true,
@@ -43,8 +41,8 @@ export default class SignInComponent implements OnInit {
   private alertService = inject(AlertService);
 
   signInForm = this.fb.group({
-    username: ["yusufaye", [Validators.required]],
-    password: ["okay", [Validators.required]],
+    username: ["admin", [Validators.required]],
+    password: ["admin", [Validators.required]],
     rememberMe: [true, [Validators.required]],
   });
 

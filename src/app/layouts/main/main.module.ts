@@ -1,35 +1,42 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-import FooterComponent from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
-import MainComponent from './main.component';
-import NavbarComponent from '../navbar/navbar.component';
-import { Authority } from 'app/config/authority.constants';
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
-import HomeComponent from 'app/home/home.component';
-import entityRoutes from 'app/entities/entity.routes';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule, Routes } from "@angular/router";
+import FooterComponent from "../footer/footer.component";
+import { SidebarComponent } from "../sidebar/sidebar.component";
+import MainComponent from "./main.component";
+import NavbarComponent from "../navbar/navbar.component";
+import { Authority } from "app/config/authority.constants";
+import { UserRouteAccessService } from "app/core/auth/user-route-access.service";
+import HomeComponent from "app/home/home.component";
+import entityRoutes from "app/entities/entity.routes";
 
 const routes: Routes = [
   {
-    path: '',
+    path: "",
     component: MainComponent,
     children: [
-      { path: '', title: 'home', component: HomeComponent },
+      { path: "", title: "home", component: HomeComponent },
       {
-        path: 'ngelmak-administration',
+        path: "ngelmak-administration",
         data: {
           authorities: [Authority.ADMIN],
         },
         canActivate: [UserRouteAccessService],
-        loadChildren: () => import('app/admin/admin.routes'),
+        loadChildren: () => import("app/admin/admin.routes"),
       },
       {
-        path: 'account-management',
-        loadChildren: () => import('app/account-management/account-management.module').then(m => m.AccountManagementModule),
+        path: "account-management",
+        data: {
+          authorities: [Authority.USER],
+        },
+        canActivate: [UserRouteAccessService],
+        loadChildren: () =>
+          import("app/account-management/account-management.module").then(
+            (m) => m.AccountManagementModule
+          ),
       },
       ...entityRoutes, // entities routes
-    ]
+    ],
   },
 ];
 
@@ -40,8 +47,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NavbarComponent,
     SidebarComponent,
-    FooterComponent
+    FooterComponent,
   ],
   exports: [RouterModule],
 })
-export class MainModule { }
+export class MainModule {}

@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import SignInComponent from './authentication/sign-in/sign-in.component';
+import { ActivateComponent } from 'app/authentication/activate/activate.component';
+import SignInComponent from 'app/authentication/sign-in/sign-in.component';
+import { SignUpComponent } from 'app/authentication/sign-up/sign-up.component';
 import { errorRoute } from 'app/layouts/error/error.route';
-import { SignUpComponent } from './authentication/sign-up/sign-up.component';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,11 @@ export const routes: Routes = [
     path: 'sign-up',
     component: SignUpComponent,
     title: 'sign-up.title',
+  },
+  {
+    path: 'activate',
+    component: ActivateComponent,
+    title: 'activate.title',
   },
   ...errorRoute,
 ];

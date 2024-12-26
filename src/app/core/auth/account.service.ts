@@ -1,14 +1,14 @@
-import { inject, Injectable, Signal, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { Observable, ReplaySubject, of } from 'rxjs';
-import { shareReplay, tap, catchError } from 'rxjs/operators';
+import { inject, Injectable, Signal, signal } from "@angular/core";
+import { Router } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
+import { Observable, ReplaySubject, of } from "rxjs";
+import { shareReplay, tap, catchError } from "rxjs/operators";
 
-import { StateStorageService } from 'app/core/auth/state-storage.service';
-import { Account } from 'app/core/auth/account.model';
-import { ApplicationConfigService } from '../config/application-config.service';
+import { StateStorageService } from "app/core/auth/state-storage.service";
+import { Account } from "app/core/auth/account.model";
+import { ApplicationConfigService } from "../config/application-config.service";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class AccountService {
   private userIdentity = signal<Account | null>(null);
   private authenticationState = new ReplaySubject<Account | null>(1);
@@ -20,7 +20,23 @@ export class AccountService {
   private applicationConfigService = inject(ApplicationConfigService);
 
   save(account: Account): Observable<{}> {
-    return this.http.post(this.applicationConfigService.getEndpointFor('api/account'), account);
+    return this.http.post(
+      this.applicationConfigService.getEndpointFor("api/account"),
+      account
+    );
+  }
+
+  requestCertification(request: {
+    officialDocType;
+    officialDocIdentification;
+  }): Observable<{}> {
+    return this.http.put(
+      `${this.applicationConfigService.getEndpointFor(
+        "api/account"
+      )}/account-request-certification`,
+      request,
+      { observe: "response" }
+    );
   }
 
   authenticate(identity: Account | null): void {
@@ -43,26 +59,28 @@ export class AccountService {
     if (!Array.isArray(authorities)) {
       authorities = [authorities];
     }
-    return userIdentity.authorities.some((authority: string) => authorities.includes(authority));
+    return userIdentity.authorities.some((authority: string) =>
+      authorities.includes(authority)
+    );
   }
 
   identity(force?: boolean): Observable<Account | null> {
     if (!this.accountCache$ || force) {
-      this.accountCache$ = this.fetchUserAccount()
-        .pipe(tap((account: Account) => {
-            this.authenticate(account);
+      this.accountCache$ = this.fetchUserAccount().pipe(
+        tap((account: Account) => {
+          this.authenticate(account);
 
-            // After retrieve the account info, the language will be changed to
-            // the user's preferred language configured in the account setting
-            // unless user have choosed other language in the current session
-            // if (!this.stateStorageService.getLocale()) {
-            //   this.translateService.use(account.langKey);
-            // }
+          // After retrieve the account info, the language will be changed to
+          // the user's preferred language configured in the account setting
+          // unless user have choosed other language in the current session
+          // if (!this.stateStorageService.getLocale()) {
+          //   this.translateService.use(account.langKey);
+          // }
 
-            this.navigateToStoredUrl();
-          }),
-          shareReplay(),
-        );
+          this.navigateToStoredUrl();
+        }),
+        shareReplay()
+      );
     }
     return this.accountCache$.pipe(catchError(() => of(null)));
   }
@@ -76,7 +94,9 @@ export class AccountService {
   }
 
   private fetchUserAccount(): Observable<Account> {
-    return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
+    return this.http.get<Account>(
+      this.applicationConfigService.getEndpointFor("api/account")
+    );
   }
 
   private navigateToStoredUrl(): void {

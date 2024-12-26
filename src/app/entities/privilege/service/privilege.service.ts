@@ -18,8 +18,28 @@ export class PrivilegeService {
   protected resourceUrl =
     this.applicationConfigService.getEndpointFor("api/privileges");
 
-  grant(userPrivilege: UserPrivilege): Observable<HttpResponse<IUserPrivilege>> {
+  grant(
+    userPrivilege: UserPrivilege
+  ): Observable<HttpResponse<IUserPrivilege>> {
     return this.http.post<IUserPrivilege>(this.resourceUrl, userPrivilege, {
+      observe: "response",
+    });
+  }
+
+  revoke(id: number): Observable<HttpResponse<{}>> {
+    return this.http.delete(`${this.resourceUrl}/revoke/${id}`, {
+      observe: "response",
+    });
+  }
+
+  assign(id: number): Observable<HttpResponse<{}>> {
+    return this.http.put(`${this.resourceUrl}/assign/${id}`, null, {
+      observe: "response",
+    });
+  }
+
+  findByLogin(login: string): Observable<HttpResponse<IUserPrivilege[]>> {
+    return this.http.get<IUserPrivilege[]>(`${this.resourceUrl}/${login}`, {
       observe: "response",
     });
   }
