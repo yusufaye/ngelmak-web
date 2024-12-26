@@ -63,9 +63,9 @@ export class PrivilegeGrantComponent {
 
     this.privilegeService
       .grant({
-        privilege: this.privilegeForm.value.privilege,
-        comment: this.privilegeForm.value.comment,
         login: this.login,
+        comment: this.privilegeForm.value.comment,
+        privilege: this.privilegeForm.value.privilege,
       })
       .subscribe({
         next: () => {

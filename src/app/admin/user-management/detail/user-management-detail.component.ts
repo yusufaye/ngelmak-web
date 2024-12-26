@@ -1,14 +1,16 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { AccountService } from 'app/core/auth/account.service';
+import { IUserPrivilege } from "app/entities/user-privilege/user-privilege.model";
 import SharedModule from "app/shared/shared.module";
 
 import { MatDialog } from "@angular/material/dialog";
-import { Account } from 'app/core/auth/account.model';
-import { IPrivilege } from 'app/entities/privilege/privilege.model';
-import { PrivilegeGrantComponent } from "./privilege-grant/privilege-grant.component";
+import { Account } from "app/core/auth/account.model";
+import { IPrivilege } from "app/entities/privilege/privilege.model";
 import { PrivilegeService } from "app/entities/privilege/service/privilege.service";
-import { IUser } from "app/entities/user/user.model";
+import { AlertService } from "app/shared/alert/alert.service";
+import { CertificationComponent } from "./certification/certification.component";
+import { PrivilegeGrantComponent } from "./privilege-grant/privilege-grant.component";
+import { CertificationResetComponent } from "./certification-reset/certification-reset.component";
 
 @Component({
   standalone: true,
@@ -19,19 +21,22 @@ import { IUser } from "app/entities/user/user.model";
 export default class UserManagementDetailComponent {
   route = inject(ActivatedRoute);
   readonly dialog = inject(MatDialog);
-  private accountService = inject(AccountService);
   private privilegeService = inject(PrivilegeService);
+  private alertService = inject(AlertService);
 
-  user: Account | null = null;
+  privileges: IUserPrivilege[] = [];
+  account: Account | null = null;
+  isRevoking = signal(false);
 
   ngOnInit(): void {
-    this.user = this.route.snapshot.data["user"];
-    console.log(this.user);
-    
+    this.account = this.route.snapshot.data["account"];
+    this.loadPrivileges();
   }
-  
+
   loadPrivileges() {
-    // this.privilegeService.findByUserLogin(this.account.login).subscribe(res => (this.account = res));
+    this.privilegeService
+      .findByLogin(this.account.login)
+      .subscribe((res) => (this.privileges = res.body));
   }
 
   grant() {
@@ -39,11 +44,69 @@ export default class UserManagementDetailComponent {
       enterAnimationDuration: "300ms",
       exitAnimationDuration: "150ms",
     });
-    dialogRef.componentInstance.login = this.user.login; 
+    dialogRef.componentInstance.login = this.account.login;
 
     dialogRef
       .afterClosed()
-      .subscribe((privilege: IPrivilege) => (this.loadPrivileges()));
+      .subscribe((privilege: IPrivilege) => this.loadPrivileges());
+  }
+
+  certificate() {
+    const dialogRef = this.dialog.open(CertificationComponent, {
+      enterAnimationDuration: "300ms",
+      exitAnimationDuration: "150ms",
+    });
+    
+    dialogRef.componentInstance.login = this.account.login;
+
+    dialogRef
+      .afterClosed()
+      .subscribe((account: Account) => (this.account = account || this.account));
+  }
+
+  uncertificate() {
+    const dialogRef = this.dialog.open(CertificationResetComponent, {
+      enterAnimationDuration: "300ms",
+      exitAnimationDuration: "150ms",
+    });
+    dialogRef.componentInstance.login = this.account.login;
+
+    dialogRef
+      .afterClosed()
+      .subscribe((account: Account) => (this.account = account || this.account));
+  }
+
+  revoke(id: number) {
+    this.isRevoking.set(true);
+    this.privilegeService.revoke(id).subscribe({
+      next: () => {
+        this.isRevoking.set(false);
+        this.alertService.addAlert({ type: "success", message: "Le privilège est retiré à l'utilisateur." });
+        this.loadPrivileges();
+      },
+      error: () => {
+        this.isRevoking.set(false);
+        this.alertService.addAlert({ type: "error", message: "Une erreur s'est produite." });
+      },
+    });
+  }
+
+  assign(id: number) {
+    this.isRevoking.set(true);
+    this.privilegeService.assign(id).subscribe({
+      next: () => {
+        this.isRevoking.set(false);
+        this.alertService.addAlert({ type: "success", message: "Privilège attribuée avec succès !" });
+        this.loadPrivileges();
+      },
+      error: () => {
+        this.isRevoking.set(false);
+        this.alertService.addAlert({ type: "error", message: "Une erreur s'est produite." });
+      },
+    });
+  }
+
+  activate(id: number) {
   }
 
   previousState(): void {

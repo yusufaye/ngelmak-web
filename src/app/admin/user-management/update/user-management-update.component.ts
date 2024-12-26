@@ -4,15 +4,15 @@ import { ActivatedRoute } from '@angular/router';
 
 import SharedModule from 'app/shared/shared.module';
 import { LANGUAGES } from 'app/config/language.constants';
-import { IUser } from '../user-management.model';
 import { UserManagementService } from '../service/user-management.service';
+import { Account } from 'app/core/auth/account.model';
 
-const userTemplate = {} as IUser;
+const userTemplate = {} as Account;
 
-const newUser: IUser = {
+const newUser: Account = {
   langKey: 'fr',
   activated: true,
-} as IUser;
+} as Account;
 
 @Component({
   standalone: true,

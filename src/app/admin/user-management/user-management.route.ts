@@ -1,15 +1,17 @@
-import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, Routes, ResolveFn } from '@angular/router';
-import { of } from 'rxjs';
+import { inject } from "@angular/core";
+import { ActivatedRouteSnapshot, Routes, ResolveFn } from "@angular/router";
+import { of } from "rxjs";
 
-import { IUser } from './user-management.model';
-import { UserManagementService } from './service/user-management.service';
-import UserManagementComponent from './list/user-management.component';
-import UserManagementDetailComponent from './detail/user-management-detail.component';
-import UserManagementUpdateComponent from './update/user-management-update.component';
+import { UserManagementService } from "./service/user-management.service";
+import UserManagementComponent from "./list/user-management.component";
+import UserManagementDetailComponent from "./detail/user-management-detail.component";
+import UserManagementUpdateComponent from "./update/user-management-update.component";
+import { Account } from "app/core/auth/account.model";
 
-export const UserManagementResolve: ResolveFn<IUser | null> = (route: ActivatedRouteSnapshot) => {
-  const login = route.paramMap.get('login');
+export const UserManagementResolve: ResolveFn<Account | null> = (
+  route: ActivatedRouteSnapshot
+) => {
+  const login = route.paramMap.get("login");
   if (login) {
     return inject(UserManagementService).find(login);
   }
@@ -18,31 +20,31 @@ export const UserManagementResolve: ResolveFn<IUser | null> = (route: ActivatedR
 
 const userManagementRoute: Routes = [
   {
-    path: '',
+    path: "",
     component: UserManagementComponent,
     data: {
-      defaultSort: 'id,asc',
+      defaultSort: "id,asc",
     },
   },
   {
-    path: ':login/view',
+    path: ":login/view",
     component: UserManagementDetailComponent,
     resolve: {
-      user: UserManagementResolve,
+      account: UserManagementResolve,
     },
   },
   {
-    path: 'new',
+    path: "new",
     component: UserManagementUpdateComponent,
     resolve: {
-      user: UserManagementResolve,
+      account: UserManagementResolve,
     },
   },
   {
-    path: ':login/edit',
+    path: ":login/edit",
     component: UserManagementUpdateComponent,
     resolve: {
-      user: UserManagementResolve,
+      account: UserManagementResolve,
     },
   },
 ];

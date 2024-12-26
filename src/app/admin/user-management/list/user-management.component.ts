@@ -1,18 +1,18 @@
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { HttpResponse, HttpHeaders } from '@angular/common/http';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { combineLatest } from 'rxjs';
 
-import SharedModule from 'app/shared/shared.module';
-import { SortDirective, SortByDirective, sortStateSignal, SortService, SortState } from 'app/shared/sort';
-import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
-import { SORT } from 'app/config/navigation.constants';
-import { ItemCountComponent } from 'app/shared/pagination';
-import { AccountService } from 'app/core/auth/account.service';
-import { UserManagementService } from '../service/user-management.service';
-import { User } from '../user-management.model';
-import UserManagementDeleteDialogComponent from '../delete/user-management-delete-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SORT } from 'app/config/navigation.constants';
+import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
+import { Account } from 'app/core/auth/account.model';
+import { AccountService } from 'app/core/auth/account.service';
+import { ItemCountComponent } from 'app/shared/pagination';
+import SharedModule from 'app/shared/shared.module';
+import { SortByDirective, SortDirective, SortService, SortState, sortStateSignal } from 'app/shared/sort';
+import UserManagementDeleteDialogComponent from '../delete/user-management-delete-dialog.component';
+import { UserManagementService } from '../service/user-management.service';
 
 @Component({
   standalone: true,
@@ -30,8 +30,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export default class UserManagementComponent implements OnInit {
   currentAccount = inject(AccountService).trackCurrentAccount();
-  users = signal<User[] | null>(null);
-  user: User = null;
+  users = signal<Account[] | null>(null);
+  user: Account = null;
   isLoading = signal(false);
   totalItems = signal(0);
   itemsPerPage = ITEMS_PER_PAGE;
@@ -48,15 +48,15 @@ export default class UserManagementComponent implements OnInit {
     this.handleNavigation();
   }
 
-  setActive(user: User, isActivated: boolean): void {
+  setActive(user: Account, isActivated: boolean): void {
     this.userService.update({ ...user, activated: isActivated }).subscribe(() => this.loadAll());
   }
 
-  trackIdentity(_index: number, item: User): number {
+  trackIdentity(_index: number, item: Account): number {
     return item.id!;
   }
 
-  deleteUser(user: User): void {
+  deleteUser(user: Account): void {
     // const modalRef = this.modalService.open(UserManagementDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     // modalRef.componentInstance.user = user;
     // // unsubscribe not needed because closed completes on modal close
@@ -76,7 +76,7 @@ export default class UserManagementComponent implements OnInit {
         sort: this.sortService.buildSortParam(this.sortState(), 'id'),
       })
       .subscribe({
-        next: (res: HttpResponse<User[]>) => {
+        next: (res: HttpResponse<Account[]>) => {
           this.isLoading.set(false);
           this.onSuccess(res.body, res.headers);
         },
@@ -103,7 +103,7 @@ export default class UserManagementComponent implements OnInit {
     });
   }
 
-  private onSuccess(users: User[] | null, headers: HttpHeaders): void {
+  private onSuccess(users: Account[] | null, headers: HttpHeaders): void {
     this.totalItems.set(Number(headers.get('X-Total-Count')));
     this.users.set(users);
   }
