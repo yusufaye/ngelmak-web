@@ -1,13 +1,12 @@
-import dayjs from "dayjs/esm";
+import { IUser } from 'app/entities/user/user.model';
 import { GrantStatus } from "../enumerations/grant-status.model";
 import { IPrivilege } from "../privilege/privilege.model";
-import { IUser } from "app/admin/user-management/user-management.model";
 
 export interface IUserPrivilege {
   id?: number | null;
   grantStatus?: GrantStatus;
-  date?: dayjs.Dayjs | null;
-  lastUpdatedDate?: dayjs.Dayjs | null;
+  date?: Date | null;
+  lastUpdatedDate?: Date | null;
   comment?: string;
   privilege?: IPrivilege;
   lastUpdatedBy?: IUser;
