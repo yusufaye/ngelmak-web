@@ -1,9 +1,15 @@
 export enum CertificationStatus {
-  REJECTED = 'REJECTED',
+  REJECTED = "REJECTED",
 
-  REQUESTED = 'REQUESTED',
+  REQUESTED = "REQUESTED",
 
-  CERTIFIED = 'CERTIFIED',
+  CERTIFIED = "CERTIFIED",
+}
+
+export enum DocType {
+  NATIONAL_ID_CARD = "NATIONAL_ID_CARD",
+  
+  PASSPORT = "PASSPORT",
 }
 
 export class Account {
@@ -21,6 +27,6 @@ export class Account {
     public certificationStatus?: CertificationStatus,
     public lastModifiedDate?: Date,
     public authorities?: string[],
-    public privileges?: string[],
+    public privileges?: string[]
   ) {}
 }

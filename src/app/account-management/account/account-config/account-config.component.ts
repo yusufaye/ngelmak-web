@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from 'app/core/auth/account.service';
 import { IConfig } from 'app/entities/config/config.model';
-import { NgelmakAccountService } from 'app/entities/ngelmak-account/ngelmak-account.service';
+import { NkAccountService } from 'app/entities/nk-account/nk-account.service';
 import SharedModule from 'app/shared/shared.module';
 
 @Component({
@@ -13,8 +13,9 @@ import SharedModule from 'app/shared/shared.module';
   styleUrl: './account-config.component.scss'
 })
 export class AccountConfigComponent {
-  private ngelmakAccountService = inject(NgelmakAccountService);
+  private nkAccountService = inject(NkAccountService);
   account = inject(AccountService).trackCurrentAccount();
+  nkAccount = inject(NkAccountService).trackCurrentUser();
   isSaving = signal(false);
   flashBoxShadowState = null; // set to null to avoid flash box-shadow animation to first when the DOM starts.
 
@@ -26,16 +27,14 @@ export class AccountConfigComponent {
   config: IConfig;
 
   ngOnInit(): void {
-    this.ngelmakAccountService.findByCurrentUser().subscribe(response => {
-      this.config = response.body.configuration;
-      this.conifgForm.patchValue(this.config);
-    });
+    this.config = this.nkAccount().configuration;
+    this.conifgForm.patchValue(this.config);
   }
 
   save() {
     this.isSaving.set(true);
     this.flashBoxShadowState = true;
     const conifg: IConfig = this.conifgForm.value as IConfig;
-    this.ngelmakAccountService.partialUpdate(conifg).subscribe({ complete: () => (this.isSaving.set(false)) });
+    this.nkAccountService.partialUpdate(conifg).subscribe({ complete: () => (this.isSaving.set(false)) });
   }
 }

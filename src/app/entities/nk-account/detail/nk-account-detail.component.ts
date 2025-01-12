@@ -3,16 +3,16 @@ import { RouterModule } from '@angular/router';
 
 import SharedModule from 'app/shared/shared.module';
 import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
-import { INgelmakAccount } from '../ngelmak-account.model';
+import { INkAccount } from '../nk-account.model';
 
 @Component({
   standalone: true,
-  selector: 'app-ngelmak-account-detail',
-  templateUrl: './ngelmak-account-detail.component.html',
+  selector: 'app-nk-account-detail',
+  templateUrl: './nk-account-detail.component.html',
   imports: [SharedModule, RouterModule, DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe],
 })
-export class NgelmakAccountDetailComponent {
-  ngelmakAccount = input<INgelmakAccount | null>(null);
+export class NkAccountDetailComponent {
+  nkAccount = input<INkAccount | null>(null);
 
   previousState(): void {
     window.history.back();

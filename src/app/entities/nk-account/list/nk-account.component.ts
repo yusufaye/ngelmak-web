@@ -6,19 +6,18 @@ import { combineLatest, filter, Observable, Subscription, tap } from 'rxjs';
 import SharedModule from 'app/shared/shared.module';
 import { sortStateSignal, SortDirective, SortByDirective, type SortState, SortService } from 'app/shared/sort';
 import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
-import { ItemCountComponent } from 'app/shared/pagination';
 import { FormsModule } from '@angular/forms';
 
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { INgelmakAccount } from '../ngelmak-account.model';
-import { EntityArrayResponseType, NgelmakAccountService } from '../ngelmak-account.service';
-import { NgelmakAccountDeleteDialogComponent } from '../delete/ngelmak-account-delete-dialog.component';
+import { INkAccount } from '../nk-account.model';
+import { EntityArrayResponseType, NkAccountService } from '../nk-account.service';
+import { NkAccountDeleteDialogComponent } from '../delete/nk-account-delete-dialog.component';
 
 @Component({
   standalone: true,
-  selector: 'app-ngelmak-account',
-  templateUrl: './ngelmak-account.component.html',
+  selector: 'app-nk-account',
+  templateUrl: './nk-account.component.html',
   imports: [
     RouterModule,
     FormsModule,
@@ -28,12 +27,11 @@ import { NgelmakAccountDeleteDialogComponent } from '../delete/ngelmak-account-d
     DurationPipe,
     FormatMediumDatetimePipe,
     FormatMediumDatePipe,
-    ItemCountComponent,
   ],
 })
-export class NgelmakAccountComponent implements OnInit {
+export class NkAccountComponent implements OnInit {
   subscription: Subscription | null = null;
-  ngelmakAccounts?: INgelmakAccount[];
+  nkAccounts?: INkAccount[];
   isLoading = false;
 
   sortState = sortStateSignal({});
@@ -43,13 +41,13 @@ export class NgelmakAccountComponent implements OnInit {
   page = 1;
 
   public router = inject(Router);
-  protected ngelmakAccountService = inject(NgelmakAccountService);
+  protected nkAccountService = inject(NkAccountService);
   protected activatedRoute = inject(ActivatedRoute);
   protected sortService = inject(SortService);
 
   protected ngZone = inject(NgZone);
 
-  // trackId = (_index: number, item: INgelmakAccount): number => this.ngelmakAccountService.getNgelmakAccountIdentifier(item);
+  // trackId = (_index: number, item: INkAccount): number => this.nkAccountService.getNkAccountIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
@@ -60,9 +58,9 @@ export class NgelmakAccountComponent implements OnInit {
       .subscribe();
   }
 
-  delete(ngelmakAccount: INgelmakAccount): void {
-    // const modalRef = this.modalService.open(NgelmakAccountDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
-    // modalRef.componentInstance.ngelmakAccount = ngelmakAccount;
+  delete(nkAccount: INkAccount): void {
+    // const modalRef = this.modalService.open(NkAccountDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    // modalRef.componentInstance.nkAccount = nkAccount;
     // // unsubscribe not needed because closed completes on modal close
     // modalRef.closed
     //   .pipe(
@@ -97,10 +95,10 @@ export class NgelmakAccountComponent implements OnInit {
   protected onResponseSuccess(response: EntityArrayResponseType): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
     const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body);
-    this.ngelmakAccounts = dataFromBody;
+    this.nkAccounts = dataFromBody;
   }
 
-  protected fillComponentAttributesFromResponseBody(data: INgelmakAccount[] | null): INgelmakAccount[] {
+  protected fillComponentAttributesFromResponseBody(data: INkAccount[] | null): INkAccount[] {
     return data ?? [];
   }
 
@@ -118,7 +116,7 @@ export class NgelmakAccountComponent implements OnInit {
       size: this.itemsPerPage,
       sort: this.sortService.buildSortParam(this.sortState()),
     };
-    return this.ngelmakAccountService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+    return this.nkAccountService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
 
   protected handleNavigation(page: number, sortState: SortState): void {

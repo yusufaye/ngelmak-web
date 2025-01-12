@@ -3,7 +3,7 @@ import { IConfig } from 'app/entities/config/config.model';
 import { IUser } from 'app/entities/user/user.model';
 import { Accessibility } from 'app/entities/enumerations/accessibility.model';
 
-export interface INgelmakAccount {
+export interface INkAccount {
   id: number | null;
   name?: string | null;
   description?: string | null;

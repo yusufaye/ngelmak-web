@@ -4,18 +4,18 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { of, EMPTY, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { INgelmakAccount } from '../ngelmak-account.model';
-import { NgelmakAccountService } from '../ngelmak-account.service';
+import { INkAccount } from '../nk-account.model';
+import { NkAccountService } from '../nk-account.service';
 
-const ngelmakAccountResolve = (route: ActivatedRouteSnapshot): Observable<null | INgelmakAccount> => {
+const nkAccountResolve = (route: ActivatedRouteSnapshot): Observable<null | INkAccount> => {
   const id = route.params['id'];
   if (id) {
-    return inject(NgelmakAccountService)
+    return inject(NkAccountService)
       .find(id)
       .pipe(
-        mergeMap((ngelmakAccount: HttpResponse<INgelmakAccount>) => {
-          if (ngelmakAccount.body) {
-            return of(ngelmakAccount.body);
+        mergeMap((nkAccount: HttpResponse<INkAccount>) => {
+          if (nkAccount.body) {
+            return of(nkAccount.body);
           } else {
             inject(Router).navigate(['404']);
             return EMPTY;
@@ -26,4 +26,4 @@ const ngelmakAccountResolve = (route: ActivatedRouteSnapshot): Observable<null |
   return of(null);
 };
 
-export default ngelmakAccountResolve;
+export default nkAccountResolve;

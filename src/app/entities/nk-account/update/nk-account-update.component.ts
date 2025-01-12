@@ -11,27 +11,27 @@ import { IConfig } from 'app/entities/config/config.model';
 import { ConfigService } from 'app/entities/config/service/config.service';
 import { IUser } from 'app/entities/user/user.model';
 import { Accessibility } from 'app/entities/enumerations/accessibility.model';
-import { NgelmakAccountService } from '../ngelmak-account.service';
-import { INgelmakAccount } from 'app/entities/ngelmak-account/ngelmak-account.model';
+import { NkAccountService } from '../nk-account.service';
+import { INkAccount } from 'app/entities/nk-account/nk-account.model';
 import { Visibility } from 'app/entities/enumerations/visibility.model';
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import dayjs from 'dayjs/esm';
 
 @Component({
   standalone: true,
-  selector: 'app-ngelmak-account-update',
-  templateUrl: './ngelmak-account-update.component.html',
+  selector: 'app-nk-account-update',
+  templateUrl: './nk-account-update.component.html',
   imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
-export class NgelmakAccountUpdateComponent implements OnInit {
+export class NkAccountUpdateComponent implements OnInit {
   isSaving = false;
-  ngelmakAccount: INgelmakAccount | null = null;
+  nkAccount: INkAccount | null = null;
   accessibilityValues = Object.keys(Accessibility);
 
   configurationsCollection: IConfig[] = [];
   usersSharedCollection: IUser[] = [];
 
-  protected ngelmakAccountService = inject(NgelmakAccountService);
+  protected nkAccountService = inject(NkAccountService);
   protected configService = inject(ConfigService);
   protected activatedRoute = inject(ActivatedRoute);
   protected fb = inject(FormBuilder);
@@ -51,10 +51,10 @@ export class NgelmakAccountUpdateComponent implements OnInit {
   compareConfig = (o1: IConfig | null, o2: IConfig | null): boolean => this.configService.compareConfig(o1, o2);
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ ngelmakAccount }) => {
-      this.ngelmakAccount = ngelmakAccount;
-      if (ngelmakAccount) {
-        this.updateForm(ngelmakAccount);
+    this.activatedRoute.data.subscribe(({ nkAccount }) => {
+      this.nkAccount = nkAccount;
+      if (nkAccount) {
+        this.updateForm(nkAccount);
       }
 
       this.loadRelationshipsOptions();
@@ -67,19 +67,19 @@ export class NgelmakAccountUpdateComponent implements OnInit {
 
   save(): void {
     // this.isSaving = true;
-    const rawNgelmakAccount = this.editForm.getRawValue();
-    const ngelmakAccount: INgelmakAccount = {
-      ...rawNgelmakAccount,
-      createdAt: dayjs(rawNgelmakAccount.createdAt, DATE_TIME_FORMAT),
+    const rawNkAccount = this.editForm.getRawValue();
+    const nkAccount: INkAccount = {
+      ...rawNkAccount,
+      createdAt: dayjs(rawNkAccount.createdAt, DATE_TIME_FORMAT),
     }
-    if (ngelmakAccount.id !== null) {
-      this.subscribeToSaveResponse(this.ngelmakAccountService.update(ngelmakAccount));
+    if (nkAccount.id !== null) {
+      this.subscribeToSaveResponse(this.nkAccountService.update(nkAccount));
     } else {
-      this.subscribeToSaveResponse(this.ngelmakAccountService.create(ngelmakAccount));
+      this.subscribeToSaveResponse(this.nkAccountService.create(nkAccount));
     }
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<INgelmakAccount>>): void {
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<INkAccount>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
@@ -98,14 +98,14 @@ export class NgelmakAccountUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  protected updateForm(ngelmakAccount: INgelmakAccount): void {
-    this.ngelmakAccount = ngelmakAccount;
-    // this.editForm.reset({...ngelmakAccount});
+  protected updateForm(nkAccount: INkAccount): void {
+    this.nkAccount = nkAccount;
+    // this.editForm.reset({...nkAccount});
 
-    // this.ngelmakAccountFormService.resetForm(this.editForm, ngelmakAccount);
+    // this.nkAccountFormService.resetForm(this.editForm, nkAccount);
     // this.configurationsCollection = this.configService.addConfigToCollectionIfMissing<IConfig>(
     //   this.configurationsCollection,
-    //   ngelmakAccount.configuration,
+    //   nkAccount.configuration,
     // );
   }
 
@@ -115,7 +115,7 @@ export class NgelmakAccountUpdateComponent implements OnInit {
       .pipe(map((res: HttpResponse<IConfig[]>) => res.body ?? []))
       .pipe(
         map((configs: IConfig[]) =>
-          this.configService.addConfigToCollectionIfMissing<IConfig>(configs, this.ngelmakAccount?.configuration),
+          this.configService.addConfigToCollectionIfMissing<IConfig>(configs, this.nkAccount?.configuration),
         ),
       )
       .subscribe((configs: IConfig[]) => (this.configurationsCollection = configs));
