@@ -1,20 +1,18 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
-import SharedModule from 'app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import SharedModule from 'app/shared/shared.module';
 
-import { INgelmakAccount } from 'app/entities/ngelmak-account/ngelmak-account.model';
-import { NgelmakAccountService } from 'app/entities/ngelmak-account/ngelmak-account.service';
-import { ITicket } from 'app/entities/ticket/ticket.model';
-import { TicketService } from 'app/entities/ticket/service/ticket.service';
 import { Status } from 'app/entities/enumerations/status.model';
-import { ReviewService } from '../service/review.service';
+import { TicketService } from 'app/entities/ticket/service/ticket.service';
+import { ITicket } from 'app/entities/ticket/ticket.model';
 import { IReview } from '../review.model';
-import { ReviewFormService, ReviewFormGroup } from './review-form.service';
+import { ReviewService } from '../service/review.service';
+import { ReviewFormGroup, ReviewFormService } from './review-form.service';
 
 @Component({
   standalone: true,
@@ -28,24 +26,15 @@ export class ReviewUpdateComponent implements OnInit {
   statusValues = Object.keys(Status);
 
   reviewsSharedCollection: IReview[] = [];
-  ngelmakAccountsSharedCollection: INgelmakAccount[] = [];
   ticketsSharedCollection: ITicket[] = [];
 
   protected reviewService = inject(ReviewService);
   protected reviewFormService = inject(ReviewFormService);
-  protected ngelmakAccountService = inject(NgelmakAccountService);
   protected ticketService = inject(TicketService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: ReviewFormGroup = this.reviewFormService.createReviewFormGroup();
-
-  compareReview = (o1: IReview | null, o2: IReview | null): boolean => this.reviewService.compareReview(o1, o2);
-
-  compareNgelmakAccount = (o1: INgelmakAccount | null, o2: INgelmakAccount | null): boolean =>
-    this.ngelmakAccountService.compareNgelmakAccount(o1, o2);
-
-  compareTicket = (o1: ITicket | null, o2: ITicket | null): boolean => this.ticketService.compareTicket(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ review }) => {
@@ -92,38 +81,38 @@ export class ReviewUpdateComponent implements OnInit {
   }
 
   protected updateForm(review: IReview): void {
-    this.review = review;
-    this.reviewFormService.resetForm(this.editForm, review);
+    // this.review = review;
+    // this.reviewFormService.resetForm(this.editForm, review);
 
-    this.reviewsSharedCollection = this.reviewService.addReviewToCollectionIfMissing<IReview>(this.reviewsSharedCollection, review.replyto);
-    this.ngelmakAccountsSharedCollection = this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
-      this.ngelmakAccountsSharedCollection,
-      review.account,
-    );
-    this.ticketsSharedCollection = this.ticketService.addTicketToCollectionIfMissing<ITicket>(this.ticketsSharedCollection, review.ticket);
+    // this.reviewsSharedCollection = this.reviewService.addReviewToCollectionIfMissing<IReview>(this.reviewsSharedCollection, review.replyto);
+    // this.nkAccountsSharedCollection = this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    //   this.nkAccountsSharedCollection,
+    //   review.account,
+    // );
+    // this.ticketsSharedCollection = this.ticketService.addTicketToCollectionIfMissing<ITicket>(this.ticketsSharedCollection, review.ticket);
   }
 
   protected loadRelationshipsOptions(): void {
-    this.reviewService
-      .query()
-      .pipe(map((res: HttpResponse<IReview[]>) => res.body ?? []))
-      .pipe(map((reviews: IReview[]) => this.reviewService.addReviewToCollectionIfMissing<IReview>(reviews, this.review?.replyto)))
-      .subscribe((reviews: IReview[]) => (this.reviewsSharedCollection = reviews));
+    // this.reviewService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<IReview[]>) => res.body ?? []))
+    //   .pipe(map((reviews: IReview[]) => this.reviewService.addReviewToCollectionIfMissing<IReview>(reviews, this.review?.replyto)))
+    //   .subscribe((reviews: IReview[]) => (this.reviewsSharedCollection = reviews));
 
-    this.ngelmakAccountService
-      .query()
-      .pipe(map((res: HttpResponse<INgelmakAccount[]>) => res.body ?? []))
-      .pipe(
-        map((ngelmakAccounts: INgelmakAccount[]) =>
-          this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(ngelmakAccounts, this.review?.account),
-        ),
-      )
-      .subscribe((ngelmakAccounts: INgelmakAccount[]) => (this.ngelmakAccountsSharedCollection = ngelmakAccounts));
+    // this.nkAccountService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<INkAccount[]>) => res.body ?? []))
+    //   .pipe(
+    //     map((nkAccounts: INkAccount[]) =>
+    //       this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(nkAccounts, this.review?.account),
+    //     ),
+    //   )
+    //   .subscribe((nkAccounts: INkAccount[]) => (this.nkAccountsSharedCollection = nkAccounts));
 
-    this.ticketService
-      .query()
-      .pipe(map((res: HttpResponse<ITicket[]>) => res.body ?? []))
-      .pipe(map((tickets: ITicket[]) => this.ticketService.addTicketToCollectionIfMissing<ITicket>(tickets, this.review?.ticket)))
-      .subscribe((tickets: ITicket[]) => (this.ticketsSharedCollection = tickets));
+    // this.ticketService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<ITicket[]>) => res.body ?? []))
+    //   .pipe(map((tickets: ITicket[]) => this.ticketService.addTicketToCollectionIfMissing<ITicket>(tickets, this.review?.ticket)))
+    //   .subscribe((tickets: ITicket[]) => (this.ticketsSharedCollection = tickets));
   }
 }

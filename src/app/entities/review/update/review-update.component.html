@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center">
+<!-- <div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2 id="app-review-heading" data-cy="ReviewCreateUpdateHeading" >
@@ -90,13 +90,12 @@
             data-cy="account"
             name="account"
             formControlName="account"
-            [compareWith]="compareNgelmakAccount"
           >
             @if (editForm.get(['account'])!.value == null) {
               <option [ngValue]="null" selected></option>
             }
-            @for (ngelmakAccountOption of ngelmakAccountsSharedCollection; track $index) {
-              <option [ngValue]="ngelmakAccountOption">{{ ngelmakAccountOption.id }}</option>
+            @for (nkAccountOption of nkAccountsSharedCollection; track $index) {
+              <option [ngValue]="nkAccountOption">{{ nkAccountOption.id }}</option>
             }
           </select>
         </div>
@@ -116,7 +115,6 @@
             data-cy="ticket"
             name="ticket"
             formControlName="ticket"
-            [compareWith]="compareTicket"
           >
             <option [ngValue]="null"></option>
             @for (ticketOption of ticketsSharedCollection; track $index) {
@@ -133,7 +131,6 @@
             data-cy="replyto"
             name="replyto"
             formControlName="replyto"
-            [compareWith]="compareReview"
           >
             <option [ngValue]="null"></option>
             @for (reviewOption of reviewsSharedCollection; track $index) {
@@ -160,4 +157,4 @@
       </div>
     </form>
   </div>
-</div>
+</div> -->

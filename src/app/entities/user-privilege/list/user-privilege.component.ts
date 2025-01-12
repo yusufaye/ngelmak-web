@@ -1,5 +1,5 @@
-import { Component, NgZone, inject, OnInit } from "@angular/core";
 import { HttpHeaders } from "@angular/common/http";
+import { Component, inject, NgZone, OnInit } from "@angular/core";
 import {
   ActivatedRoute,
   Data,
@@ -7,41 +7,36 @@ import {
   Router,
   RouterModule,
 } from "@angular/router";
-import { combineLatest, filter, Observable, Subscription, tap } from "rxjs";
+import { combineLatest, Observable, Subscription, tap } from "rxjs";
 
-import SharedModule from "app/shared/shared.module";
-import {
-  sortStateSignal,
-  SortDirective,
-  SortByDirective,
-  type SortState,
-  SortService,
-} from "app/shared/sort";
+import { FormsModule } from "@angular/forms";
 import {
   DurationPipe,
-  FormatMediumDatetimePipe,
   FormatMediumDatePipe,
+  FormatMediumDatetimePipe,
 } from "app/shared/date";
-import { ItemCountComponent } from "app/shared/pagination";
-import { FormsModule } from "@angular/forms";
-
-import { IUserPrivilege } from "../ngelmak-account-privilege.model";
+import SharedModule from "app/shared/shared.module";
 import {
-  EntityArrayResponseType,
-  UserPrivilegeService,
-} from "../service/ngelmak-account-privilege.service";
-import { UserPrivilegeDeleteDialogComponent } from "../delete/ngelmak-account-privilege-delete-dialog.component";
+  SortByDirective,
+  SortDirective,
+  SortService,
+  sortStateSignal,
+  type SortState,
+} from "app/shared/sort";
+
+import { DEFAULT_SORT_DATA, SORT } from "app/config/navigation.constants";
 import {
   ITEMS_PER_PAGE,
   PAGE_HEADER,
   TOTAL_COUNT_RESPONSE_HEADER,
 } from "app/config/pagination.constants";
-import { DEFAULT_SORT_DATA, SORT } from "app/config/navigation.constants";
+import { EntityArrayResponseType, UserPrivilegeService } from "../service/user-privilege.service";
+import { IUserPrivilege } from "../user-privilege.model";
 
 @Component({
   standalone: true,
-  selector: "app-ngelmak-account-privilege",
-  templateUrl: "./ngelmak-account-privilege.component.html",
+  selector: "app-user-privilege",
+  templateUrl: "./user-privilege.component.html",
   imports: [
     RouterModule,
     FormsModule,
@@ -51,7 +46,6 @@ import { DEFAULT_SORT_DATA, SORT } from "app/config/navigation.constants";
     DurationPipe,
     FormatMediumDatetimePipe,
     FormatMediumDatePipe,
-    ItemCountComponent,
   ],
 })
 export class UserPrivilegeComponent implements OnInit {
@@ -73,11 +67,6 @@ export class UserPrivilegeComponent implements OnInit {
   protected sortService = inject(SortService);
 
   protected ngZone = inject(NgZone);
-
-  trackId = (_index: number, item: IUserPrivilege): number =>
-    this.userPrivilegeService.getUserPrivilegeIdentifier(
-      item
-    );
 
   ngOnInit(): void {
     this.subscription = combineLatest([

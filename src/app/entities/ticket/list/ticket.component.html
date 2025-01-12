@@ -130,14 +130,14 @@
               <td>
                 @if (ticket.accountRelated) {
                   <div>
-                    <a [routerLink]="['/ngelmak-account', ticket.accountRelated.id, 'view']">{{ ticket.accountRelated.id }}</a>
+                    <a [routerLink]="['/nk-account', ticket.accountRelated.id, 'view']">{{ ticket.accountRelated.id }}</a>
                   </div>
                 }
               </td>
               <td>
                 @if (ticket.issuedby) {
                   <div>
-                    <a [routerLink]="['/ngelmak-account', ticket.issuedby.id, 'view']">{{ ticket.issuedby.id }}</a>
+                    <a [routerLink]="['/nk-account', ticket.issuedby.id, 'view']">{{ ticket.issuedby.id }}</a>
                   </div>
                 }
               </td>
@@ -168,7 +168,7 @@
   @if (tickets && tickets.length > 0) {
     <div>
       <div class="d-flex justify-content-center">
-        <app-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></app-item-count>
+        <!-- <app-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></app-item-count> -->
       </div>
 
       <div class="d-flex justify-content-center">

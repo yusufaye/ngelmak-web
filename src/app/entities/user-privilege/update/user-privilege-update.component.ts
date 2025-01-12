@@ -9,14 +9,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { Accessibility } from 'app/entities/enumerations/accessibility.model';
 import { Visibility } from 'app/entities/enumerations/visibility.model';
-import { IUserPrivilege } from '../ngelmak-account-privilege.model';
-import { UserPrivilegeService } from '../service/ngelmak-account-privilege.service';
-import { UserPrivilegeFormService, UserPrivilegeFormGroup } from './ngelmak-account-privilege-form.service';
+import { IUserPrivilege } from '../nk-account-privilege.model';
+import { UserPrivilegeService } from '../service/nk-account-privilege.service';
+import { UserPrivilegeFormService, UserPrivilegeFormGroup } from './nk-account-privilege-form.service';
 
 @Component({
   standalone: true,
-  selector: 'app-ngelmak-account-privilege-update',
-  templateUrl: './ngelmak-account-privilege-update.component.html',
+  selector: 'app-nk-account-privilege-update',
+  templateUrl: './nk-account-privilege-update.component.html',
   imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
 export class UserPrivilegeUpdateComponent implements OnInit {

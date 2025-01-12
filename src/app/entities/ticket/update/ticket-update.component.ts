@@ -12,9 +12,7 @@ import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { IPost } from 'app/entities/post/post.model';
 import { PostService } from 'app/entities/post/post.service';
 import { IComment } from 'app/entities/comment/comment.model';
-import { CommentService } from 'app/entities/comment/service/comment.service';
-import { INgelmakAccount } from 'app/entities/ngelmak-account/ngelmak-account.model';
-import { NgelmakAccountService } from 'app/entities/ngelmak-account/ngelmak-account.service';
+import { CommentService } from 'app/entities/comment/comment.service';
 import { TicketType } from 'app/entities/enumerations/ticket-type.model';
 import { TicketService } from '../service/ticket.service';
 import { ITicket } from '../ticket.model';
@@ -34,7 +32,6 @@ export class TicketUpdateComponent implements OnInit {
 
   postsSharedCollection: IPost[] = [];
   commentsSharedCollection: IComment[] = [];
-  ngelmakAccountsSharedCollection: INgelmakAccount[] = [];
 
   protected dataUtils = inject(DataUtils);
   protected eventManager = inject(EventManager);
@@ -42,18 +39,10 @@ export class TicketUpdateComponent implements OnInit {
   protected ticketFormService = inject(TicketFormService);
   protected postService = inject(PostService);
   protected commentService = inject(CommentService);
-  protected ngelmakAccountService = inject(NgelmakAccountService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: TicketFormGroup = this.ticketFormService.createTicketFormGroup();
-
-  comparePost = (o1: IPost | null, o2: IPost | null): boolean => this.postService.comparePost(o1, o2);
-
-  compareComment = (o1: IComment | null, o2: IComment | null): boolean => this.commentService.compareComment(o1, o2);
-
-  compareNgelmakAccount = (o1: INgelmakAccount | null, o2: INgelmakAccount | null): boolean =>
-    this.ngelmakAccountService.compareNgelmakAccount(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ ticket }) => {
@@ -118,45 +107,45 @@ export class TicketUpdateComponent implements OnInit {
     this.ticket = ticket;
     this.ticketFormService.resetForm(this.editForm, ticket);
 
-    this.postsSharedCollection = this.postService.addPostToCollectionIfMissing<IPost>(this.postsSharedCollection, ticket.postRelated);
-    this.commentsSharedCollection = this.commentService.addCommentToCollectionIfMissing<IComment>(
-      this.commentsSharedCollection,
-      ticket.commentRelated,
-    );
-    this.ngelmakAccountsSharedCollection = this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
-      this.ngelmakAccountsSharedCollection,
-      ticket.accountRelated,
-      ticket.issuedby,
-    );
+    // this.postsSharedCollection = this.postService.addPostToCollectionIfMissing<IPost>(this.postsSharedCollection, ticket.postRelated);
+    // this.commentsSharedCollection = this.commentService.addCommentToCollectionIfMissing<IComment>(
+    //   this.commentsSharedCollection,
+    //   ticket.commentRelated,
+    // );
+    // this.nkAccountsSharedCollection = this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    //   this.nkAccountsSharedCollection,
+    //   ticket.accountRelated,
+    //   ticket.issuedby,
+    // );
   }
 
   protected loadRelationshipsOptions(): void {
-    this.postService
-      .query()
-      .pipe(map((res: HttpResponse<IPost[]>) => res.body ?? []))
-      .pipe(map((posts: IPost[]) => this.postService.addPostToCollectionIfMissing<IPost>(posts, this.ticket?.postRelated)))
-      .subscribe((posts: IPost[]) => (this.postsSharedCollection = posts));
+    // this.postService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<IPost[]>) => res.body ?? []))
+    //   .pipe(map((posts: IPost[]) => this.postService.addPostToCollectionIfMissing<IPost>(posts, this.ticket?.postRelated)))
+    //   .subscribe((posts: IPost[]) => (this.postsSharedCollection = posts));
 
-    this.commentService
-      .query()
-      .pipe(map((res: HttpResponse<IComment[]>) => res.body ?? []))
-      .pipe(
-        map((comments: IComment[]) => this.commentService.addCommentToCollectionIfMissing<IComment>(comments, this.ticket?.commentRelated)),
-      )
-      .subscribe((comments: IComment[]) => (this.commentsSharedCollection = comments));
+    // this.commentService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<IComment[]>) => res.body ?? []))
+    //   .pipe(
+    //     map((comments: IComment[]) => this.commentService.addCommentToCollectionIfMissing<IComment>(comments, this.ticket?.commentRelated)),
+    //   )
+    //   .subscribe((comments: IComment[]) => (this.commentsSharedCollection = comments));
 
-    this.ngelmakAccountService
-      .query()
-      .pipe(map((res: HttpResponse<INgelmakAccount[]>) => res.body ?? []))
-      .pipe(
-        map((ngelmakAccounts: INgelmakAccount[]) =>
-          this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
-            ngelmakAccounts,
-            this.ticket?.accountRelated,
-            this.ticket?.issuedby,
-          ),
-        ),
-      )
-      .subscribe((ngelmakAccounts: INgelmakAccount[]) => (this.ngelmakAccountsSharedCollection = ngelmakAccounts));
+    // this.nkAccountService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<INkAccount[]>) => res.body ?? []))
+    //   .pipe(
+    //     map((nkAccounts: INkAccount[]) =>
+    //       this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    //         nkAccounts,
+    //         this.ticket?.accountRelated,
+    //         this.ticket?.issuedby,
+    //       ),
+    //     ),
+    //   )
+    //   .subscribe((nkAccounts: INkAccount[]) => (this.nkAccountsSharedCollection = nkAccounts));
   }
 }

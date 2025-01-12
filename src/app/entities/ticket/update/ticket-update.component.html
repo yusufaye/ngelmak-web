@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center">
+<!-- <div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2 id="app-ticket-heading" data-cy="TicketCreateUpdateHeading" >
@@ -104,7 +104,6 @@
             data-cy="postRelated"
             name="postRelated"
             formControlName="postRelated"
-            [compareWith]="comparePost"
           >
             <option [ngValue]="null"></option>
             @for (postOption of postsSharedCollection; track $index) {
@@ -123,7 +122,6 @@
             data-cy="commentRelated"
             name="commentRelated"
             formControlName="commentRelated"
-            [compareWith]="compareComment"
           >
             <option [ngValue]="null"></option>
             @for (commentOption of commentsSharedCollection; track $index) {
@@ -142,11 +140,11 @@
             data-cy="accountRelated"
             name="accountRelated"
             formControlName="accountRelated"
-            [compareWith]="compareNgelmakAccount"
+            [compareWith]="compareNkAccount"
           >
             <option [ngValue]="null"></option>
-            @for (ngelmakAccountOption of ngelmakAccountsSharedCollection; track $index) {
-              <option [ngValue]="ngelmakAccountOption">{{ ngelmakAccountOption.id }}</option>
+            @for (nkAccountOption of nkAccountsSharedCollection; track $index) {
+              <option [ngValue]="nkAccountOption">{{ nkAccountOption.id }}</option>
             }
           </select>
         </div>
@@ -159,13 +157,13 @@
             data-cy="issuedby"
             name="issuedby"
             formControlName="issuedby"
-            [compareWith]="compareNgelmakAccount"
+            [compareWith]="compareNkAccount"
           >
             @if (editForm.get(['issuedby'])!.value == null) {
               <option [ngValue]="null" selected></option>
             }
-            @for (ngelmakAccountOption of ngelmakAccountsSharedCollection; track $index) {
-              <option [ngValue]="ngelmakAccountOption">{{ ngelmakAccountOption.id }}</option>
+            @for (nkAccountOption of nkAccountsSharedCollection; track $index) {
+              <option [ngValue]="nkAccountOption">{{ nkAccountOption.id }}</option>
             }
           </select>
         </div>
@@ -195,4 +193,4 @@
       </div>
     </form>
   </div>
-</div>
+</div> -->

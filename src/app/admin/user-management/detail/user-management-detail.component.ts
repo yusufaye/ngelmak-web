@@ -8,9 +8,9 @@ import { Account } from "app/core/auth/account.model";
 import { IPrivilege } from "app/entities/privilege/privilege.model";
 import { PrivilegeService } from "app/entities/privilege/service/privilege.service";
 import { AlertService } from "app/shared/alert/alert.service";
+import { CertificationResetComponent } from "./certification-reset/certification-reset.component";
 import { CertificationComponent } from "./certification/certification.component";
 import { PrivilegeGrantComponent } from "./privilege-grant/privilege-grant.component";
-import { CertificationResetComponent } from "./certification-reset/certification-reset.component";
 
 @Component({
   standalone: true,

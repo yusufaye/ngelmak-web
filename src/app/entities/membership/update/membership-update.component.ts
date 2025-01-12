@@ -1,17 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
-import SharedModule from 'app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import SharedModule from 'app/shared/shared.module';
 
-import { INgelmakAccount } from 'app/entities/ngelmak-account/ngelmak-account.model';
-import { NgelmakAccountService } from 'app/entities/ngelmak-account/ngelmak-account.service';
+import { INkAccount } from 'app/entities/nk-account/nk-account.model';
+import { NkAccountService } from 'app/entities/nk-account/nk-account.service';
 import { IMembership } from '../membership.model';
 import { MembershipService } from '../service/membership.service';
-import { MembershipFormService, MembershipFormGroup } from './membership-form.service';
+import { MembershipFormGroup, MembershipFormService } from './membership-form.service';
 
 @Component({
   standalone: true,
@@ -23,18 +23,16 @@ export class MembershipUpdateComponent implements OnInit {
   isSaving = false;
   membership: IMembership | null = null;
 
-  ngelmakAccountsSharedCollection: INgelmakAccount[] = [];
+  nkAccountsSharedCollection: INkAccount[] = [];
 
   protected membershipService = inject(MembershipService);
   protected membershipFormService = inject(MembershipFormService);
-  protected ngelmakAccountService = inject(NgelmakAccountService);
+  protected nkAccountService = inject(NkAccountService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: MembershipFormGroup = this.membershipFormService.createMembershipFormGroup();
 
-  compareNgelmakAccount = (o1: INgelmakAccount | null, o2: INgelmakAccount | null): boolean =>
-    this.ngelmakAccountService.compareNgelmakAccount(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ membership }) => {
@@ -81,29 +79,29 @@ export class MembershipUpdateComponent implements OnInit {
   }
 
   protected updateForm(membership: IMembership): void {
-    this.membership = membership;
-    this.membershipFormService.resetForm(this.editForm, membership);
+    // this.membership = membership;
+    // this.membershipFormService.resetForm(this.editForm, membership);
 
-    this.ngelmakAccountsSharedCollection = this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
-      this.ngelmakAccountsSharedCollection,
-      membership.account,
-      membership.subscriber,
-    );
+    // this.nkAccountsSharedCollection = this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    //   this.nkAccountsSharedCollection,
+    //   membership.account,
+    //   membership.subscriber,
+    // );
   }
 
   protected loadRelationshipsOptions(): void {
-    this.ngelmakAccountService
-      .query()
-      .pipe(map((res: HttpResponse<INgelmakAccount[]>) => res.body ?? []))
-      .pipe(
-        map((ngelmakAccounts: INgelmakAccount[]) =>
-          this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
-            ngelmakAccounts,
-            this.membership?.account,
-            this.membership?.subscriber,
-          ),
-        ),
-      )
-      .subscribe((ngelmakAccounts: INgelmakAccount[]) => (this.ngelmakAccountsSharedCollection = ngelmakAccounts));
+    // this.nkAccountService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<INkAccount[]>) => res.body ?? []))
+    //   .pipe(
+    //     map((nkAccounts: INkAccount[]) =>
+    //       this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    //         nkAccounts,
+    //         this.membership?.account,
+    //         this.membership?.subscriber,
+    //       ),
+    //     ),
+    //   )
+    //   .subscribe((nkAccounts: INkAccount[]) => (this.nkAccountsSharedCollection = nkAccounts));
   }
 }

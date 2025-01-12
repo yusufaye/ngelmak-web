@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { createRequestOption } from 'app/core/request/request-util';
-import { IUserPrivilege } from '../ngelmak-account-privilege.model';
+import { IUserPrivilege } from '../nk-account-privilege.model';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 
 export type EntityResponseType = HttpResponse<IUserPrivilege>;
@@ -14,7 +14,7 @@ export class UserPrivilegeService {
   protected http = inject(HttpClient);
   protected applicationConfigService = inject(ApplicationConfigService);
 
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/ngelmak-account-privileges');
+  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/nk-account-privileges');
 
   create(userPrivilege: IUserPrivilege): Observable<EntityResponseType> {
     return this.http

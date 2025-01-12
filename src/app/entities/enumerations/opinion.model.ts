@@ -6,6 +6,4 @@ export enum Opinion {
   SUPPORT = 'SUPPORT',
 
   NEUTRAL = 'NEUTRAL',
-
-  STRENGTHENED = 'REINFORCED',
 }

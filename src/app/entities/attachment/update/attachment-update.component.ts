@@ -65,7 +65,6 @@ export class AttachmentUpdateComponent implements OnInit {
   VOICE_RECORDED = AttachmentCategory.VOICE_RECORDED;
   postsSharedCollection: IPost[] = [];
 
-  comparePost = (o1: IPost | null, o2: IPost | null): boolean => this.postService.comparePost(o1, o2);
   readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {

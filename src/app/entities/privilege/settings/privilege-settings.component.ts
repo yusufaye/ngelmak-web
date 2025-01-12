@@ -49,7 +49,6 @@ import { DEFAULT_SORT_DATA, SORT } from "app/config/navigation.constants";
     SortDirective,
     SortByDirective,
     FormatMediumDatetimePipe,
-    ItemCountComponent,
   ],
 })
 export class PrivilegeSettingsComponent implements OnInit {

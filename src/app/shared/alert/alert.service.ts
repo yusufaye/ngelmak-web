@@ -1,5 +1,4 @@
-import { inject, Injectable, SecurityContext } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
+import { Injectable } from "@angular/core";
 
 export type AlertType = "success" | "error" | "warning" | "info";
 
@@ -23,8 +22,6 @@ export class AlertService {
   private showIcon = true;
   private showCloseButton = true;
   private autoclose = true;
-
-
   // unique id for each alert. Starts from 0.
   private alertId = 0;
   private alerts: IAlert[] = [];

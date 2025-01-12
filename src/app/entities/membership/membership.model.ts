@@ -1,10 +1,10 @@
 import dayjs from 'dayjs/esm';
-import { INgelmakAccount } from 'app/entities/ngelmak-account/ngelmak-account.model';
+import { INkAccount } from 'app/entities/nk-account/nk-account.model';
 
 export interface IMembership {
   id: number;
   at?: dayjs.Dayjs | null;
   activateNotification?: boolean | null;
-  account?: Pick<INgelmakAccount, 'id'> | null;
-  subscriber?: Pick<INgelmakAccount, 'id'> | null;
+  account?: Pick<INkAccount, 'id'> | null;
+  subscriber?: Pick<INkAccount, 'id'> | null;
 }

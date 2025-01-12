@@ -6,6 +6,7 @@ import { Account } from 'app/core/auth/account.model';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { Pagination } from 'app/core/request/request.model';
+import { IPage } from 'app/shared/pagination/pagination.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserManagementService {
@@ -26,9 +27,9 @@ export class UserManagementService {
     return this.http.get<Account>(`${this.resourceUrl}/${login}`);
   }
 
-  query(req?: Pagination): Observable<HttpResponse<Account[]>> {
+  query(req?: Pagination): Observable<HttpResponse<IPage<Account>>> {
     const options = createRequestOption(req);
-    return this.http.get<Account[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<IPage<Account>>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
   delete(login: string): Observable<{}> {

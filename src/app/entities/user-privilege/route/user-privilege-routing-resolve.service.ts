@@ -4,8 +4,8 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { of, EMPTY, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { IUserPrivilege } from '../ngelmak-account-privilege.model';
-import { UserPrivilegeService } from '../service/ngelmak-account-privilege.service';
+import { IUserPrivilege } from '../nk-account-privilege.model';
+import { UserPrivilegeService } from '../service/nk-account-privilege.service';
 
 const userPrivilegeResolve = (route: ActivatedRouteSnapshot): Observable<null | IUserPrivilege> => {
   const id = route.params['id'];

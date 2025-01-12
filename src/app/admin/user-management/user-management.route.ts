@@ -1,12 +1,12 @@
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, Routes, ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, Routes } from "@angular/router";
 import { of } from "rxjs";
 
-import { UserManagementService } from "./service/user-management.service";
-import UserManagementComponent from "./list/user-management.component";
-import UserManagementDetailComponent from "./detail/user-management-detail.component";
-import UserManagementUpdateComponent from "./update/user-management-update.component";
 import { Account } from "app/core/auth/account.model";
+import UserManagementDetailComponent from "./detail/user-management-detail.component";
+import UserManagementComponent from "./list/user-management.component";
+import { UserManagementService } from "./service/user-management.service";
+import UserManagementUpdateComponent from "./update/user-management-update.component";
 
 export const UserManagementResolve: ResolveFn<Account | null> = (
   route: ActivatedRouteSnapshot

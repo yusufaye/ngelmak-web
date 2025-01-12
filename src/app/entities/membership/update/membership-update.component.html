@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center">
+<!-- <div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2
@@ -55,13 +55,13 @@
             data-cy="account"
             name="account"
             formControlName="account"
-            [compareWith]="compareNgelmakAccount"
+            [compareWith]="compareNkAccount"
           >
             @if (editForm.get(['account'])!.value == null) {
               <option [ngValue]="null" selected></option>
             }
-            @for (ngelmakAccountOption of ngelmakAccountsSharedCollection; track $index) {
-              <option [ngValue]="ngelmakAccountOption">{{ ngelmakAccountOption.id }}</option>
+            @for (nkAccountOption of nkAccountsSharedCollection; track $index) {
+              <option [ngValue]="nkAccountOption">{{ nkAccountOption.id }}</option>
             }
           </select>
         </div>
@@ -81,13 +81,13 @@
             data-cy="subscriber"
             name="subscriber"
             formControlName="subscriber"
-            [compareWith]="compareNgelmakAccount"
+            [compareWith]="compareNkAccount"
           >
             @if (editForm.get(['subscriber'])!.value == null) {
               <option [ngValue]="null" selected></option>
             }
-            @for (ngelmakAccountOption of ngelmakAccountsSharedCollection; track $index) {
-              <option [ngValue]="ngelmakAccountOption">{{ ngelmakAccountOption.id }}</option>
+            @for (nkAccountOption of nkAccountsSharedCollection; track $index) {
+              <option [ngValue]="nkAccountOption">{{ nkAccountOption.id }}</option>
             }
           </select>
         </div>
@@ -117,4 +117,4 @@
       </div>
     </form>
   </div>
-</div>
+</div> -->

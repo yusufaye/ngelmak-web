@@ -78,14 +78,14 @@
               <td>
                 @if (membership.account) {
                   <div>
-                    <a [routerLink]="['/ngelmak-account', membership.account.id, 'view']">{{ membership.account.id }}</a>
+                    <a [routerLink]="['/nk-account', membership.account.id, 'view']">{{ membership.account.id }}</a>
                   </div>
                 }
               </td>
               <td>
                 @if (membership.subscriber) {
                   <div>
-                    <a [routerLink]="['/ngelmak-account', membership.subscriber.id, 'view']">{{ membership.subscriber.id }}</a>
+                    <a [routerLink]="['/nk-account', membership.subscriber.id, 'view']">{{ membership.subscriber.id }}</a>
                   </div>
                 }
               </td>
@@ -116,7 +116,7 @@
   @if (memberships && memberships.length > 0) {
     <div>
       <div class="d-flex justify-content-center">
-        <app-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></app-item-count>
+        <!-- <app-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></app-item-count> -->
       </div>
 
       <div class="d-flex justify-content-center">

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { IUserPrivilege } from '../ngelmak-account-privilege.model';
+import { IUserPrivilege } from '../nk-account-privilege.model';
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 /**

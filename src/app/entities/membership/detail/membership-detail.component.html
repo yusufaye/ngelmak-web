@@ -23,7 +23,7 @@
           <dd>
             @if (membership()!.account) {
               <div>
-                <a [routerLink]="['/ngelmak-account', membership()!.account?.id, 'view']">{{ membership()!.account?.id }}</a>
+                <a [routerLink]="['/nk-account', membership()!.account?.id, 'view']">{{ membership()!.account?.id }}</a>
               </div>
             }
           </dd>
@@ -31,7 +31,7 @@
           <dd>
             @if (membership()!.subscriber) {
               <div>
-                <a [routerLink]="['/ngelmak-account', membership()!.subscriber?.id, 'view']">{{ membership()!.subscriber?.id }}</a>
+                <a [routerLink]="['/nk-account', membership()!.subscriber?.id, 'view']">{{ membership()!.subscriber?.id }}</a>
               </div>
             }
           </dd>
