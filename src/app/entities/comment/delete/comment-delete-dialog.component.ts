@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import SharedModule from 'app/shared/shared.module';
 
 import { IComment } from '../comment.model';
-import { CommentService } from '../service/comment.service';
+import { CommentService } from '../comment.service';
 
 @Component({
   standalone: true,

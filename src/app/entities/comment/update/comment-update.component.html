@@ -1,160 +1,52 @@
-<div class="d-flex justify-content-center">
-  <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="app-comment-heading" data-cy="CommentCreateUpdateHeading" >
-        Créer ou éditer un Comment
-      </h2>
+<div #nkeditor
+  class="flex flex-col gap-2 w-full leading-1.5 min-w-[14rem] px-2 sm:px-4 py-2.5 border-gray-200 bg-gray-100 rounded-xl dark:bg-gray-700">
+  <div class="flex items-end gap-2 rtl:space-x-reverse">
+    <div class="flex justify-center items-center w-12 h-12">
+      <label (click)="fileUpload.click()"
+        class="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+        <svg class="w-4 h-4 sm:w-6 sm:h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
+          <path fill="currentColor"
+            d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z" />
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z" />
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z" />
+        </svg>
+        <input type="file" accept=".png, .jpg, .jpeg" class="hidden"
+          (change)="handleImage($event)" #fileUpload [disabled]="isSaving()" />
+      </label>
+    </div>
+    <!-- Input text -->
+    <div
+      class="inline-flex items-center w-full min-h-12 max-h-24 overflow-y-auto
+        bg-gray-50 border dark:border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 p-0">
+      <p class="nk-editor w-full p-2 outline-none break-words rounded-sm placeholder relative resize-none m-0"
+        contenteditable="true" data-placeholder="Commentaire...">
+      </p>
+    </div>
+    <div class="flex justify-center items-center w-12 h-12">
+      <button (click)="save()" [disabled]="isEmpty() || isSaving()"
+        class="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 disabled:cursor-not-allowed"
+        type="button">
+        <svg class="w-4 h-4 sm:w-6 sm:h-6 rotate-90 rtl:-rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor" viewBox="0 0 18 20">
+          <path
+            d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="imageSrc()" class="flex relative max-h-48">
+    <img class="h-auto rounded-lg shadow-xl dark:shadow-gray-800" [src]="imageSrc()"
+      alt="Imported image">
 
-      <div>
-
-        @if (editForm.controls.id.value !== null) {
-          <div class="mb-3">
-            <label class="form-label" for="field_id" >ID</label>
-            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
-          </div>
-        }
-
-        <div class="mb-3">
-          <label class="form-label" for="field_opinion" >Opinion</label>
-          <select class="form-control" name="opinion" formControlName="opinion" id="field_opinion" data-cy="opinion">
-            <option [ngValue]="null">{{ 'ngelmakprojectApp.Opinion.null'  }}</option>
-            @for (opinion of opinionValues; track $index) {
-              <option [value]="opinion">{{ 'ngelmakprojectApp.Opinion.' + opinion  }}</option>
-            }
-          </select>
-          @if (editForm.get('opinion')!.invalid && (editForm.get('opinion')!.dirty || editForm.get('opinion')!.touched)) {
-            <div>
-              @if (editForm.get('opinion')?.errors?.['required']) {
-                <small class="form-text text-danger" >Ce champ est obligatoire.</small>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_at" >At</label>
-          <div class="d-flex">
-            <input
-              id="field_at"
-              data-cy="at"
-              type="datetime-local"
-              class="form-control"
-              name="at"
-              formControlName="at"
-              placeholder="YYYY-MM-DD HH:mm"
-            />
-          </div>
-          @if (editForm.get('at')!.invalid && (editForm.get('at')!.dirty || editForm.get('at')!.touched)) {
-            <div>
-              @if (editForm.get('at')?.errors?.['required']) {
-                <small class="form-text text-danger" >Ce champ est obligatoire.</small>
-              }
-              <small
-                class="form-text text-danger"
-                [hidden]="!editForm.get('at')?.errors?.['datetimelocal']"
-                id="entity.validation.datetimelocal"
-                >Ce champ doit être une date et une heure.</small
-              >
-            </div>
-          }
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_lastUpdate" >Last Update</label>
-          <div class="d-flex">
-            <input
-              id="field_lastUpdate"
-              data-cy="lastUpdate"
-              type="datetime-local"
-              class="form-control"
-              name="lastUpdate"
-              formControlName="lastUpdate"
-              placeholder="YYYY-MM-DD HH:mm"
-            />
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_content" >Content</label>
-          <textarea class="form-control" name="content" id="field_content" data-cy="content" formControlName="content"></textarea>
-          @if (editForm.get('content')!.invalid && (editForm.get('content')!.dirty || editForm.get('content')!.touched)) {
-            <div>
-              @if (editForm.get('content')?.errors?.['required']) {
-                <small class="form-text text-danger" >Ce champ est obligatoire.</small>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_post" >Post</label>
-          <select class="form-control" id="field_post" data-cy="post" name="post" formControlName="post" [compareWith]="comparePost">
-            <option [ngValue]="null"></option>
-            @for (postOption of postsSharedCollection; track $index) {
-              <option [ngValue]="postOption">{{ postOption.id }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_replayto" >Replayto</label>
-          <select
-            class="form-control"
-            id="field_replayto"
-            data-cy="replayto"
-            name="replayto"
-            formControlName="replayto"
-            [compareWith]="compareComment"
-          >
-            <option [ngValue]="null"></option>
-            @for (commentOption of commentsSharedCollection; track $index) {
-              <option [ngValue]="commentOption">{{ commentOption.id }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_account" >Account</label>
-          <select
-            class="form-control"
-            id="field_account"
-            data-cy="account"
-            name="account"
-            formControlName="account"
-            [compareWith]="compareNgelmakAccount"
-          >
-            @if (editForm.get(['account'])!.value == null) {
-              <option [ngValue]="null" selected></option>
-            }
-            @for (ngelmakAccountOption of ngelmakAccountsSharedCollection; track $index) {
-              <option [ngValue]="ngelmakAccountOption">{{ ngelmakAccountOption.id }}</option>
-            }
-          </select>
-        </div>
-        @if (editForm.get(['account'])!.invalid && (editForm.get(['account'])!.dirty || editForm.get(['account'])!.touched)) {
-          <div>
-            @if (editForm.get(['account'])?.errors?.['required']) {
-              <small class="form-text text-danger" >Ce champ est obligatoire.</small>
-            }
-          </div>
-        }
-      </div>
-
-      <div>
-        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
-          <span class="ban"></span>&nbsp;<span >Annuler</span>
-        </button>
-
-        <button
-          type="submit"
-          id="save-entity"
-          data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving"
-          class="btn btn-primary"
-        >
-          <span class="save"></span>&nbsp;<span >Sauvegarder</span>
-        </button>
-      </div>
-    </form>
+    <button type="button" (click)="remove()" [disabled]="isSaving()"
+      class="ms-auto -mx-1.5 -my-1.5 bg-gray-50 text-gray-500 rounded-lg focus:ring-2 focus:ring-gray-400 p-1.5 hover:bg-gray-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white absolute top-2 right-2"
+      data-dismiss-target="#alert-5" aria-label="Close">
+      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+      </svg>
+    </button>
   </div>
 </div>

@@ -1,159 +1,140 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
-
-import SharedModule from 'app/shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
-import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-import { IPost } from 'app/entities/post/post.model';
-import { PostService } from 'app/entities/post/post.service';
-import { INgelmakAccount } from 'app/entities/ngelmak-account/ngelmak-account.model';
-import { NgelmakAccountService } from 'app/entities/ngelmak-account/ngelmak-account.service';
-import { Opinion } from 'app/entities/enumerations/opinion.model';
-import { CommentService } from '../service/comment.service';
-import { IComment } from '../comment.model';
-import { CommentFormService, CommentFormGroup } from './comment-form.service';
-import { IAlert } from 'app/shared/alert/alert.service';
+import { CommonModule } from "@angular/common";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+  ViewChild,
+} from "@angular/core";
+import { IPost } from "app/entities/post/post.model";
+import { AlertService } from "app/shared/alert/alert.service";
+import { finalize, Observable } from "rxjs";
+import { IComment } from "../comment.model";
+import { CommentService, EntityResponseType } from "../comment.service";
 
 @Component({
+  selector: "app-comment-update",
   standalone: true,
-  selector: 'app-comment-update',
-  templateUrl: './comment-update.component.html',
-  imports: [SharedModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule],
+  templateUrl: "./comment-update.component.html",
+  styleUrl: "./comment-update.component.scss",
 })
-export class CommentUpdateComponent implements OnInit {
-  isSaving = false;
-  comment: IComment | null = null;
-  opinionValues = Object.keys(Opinion);
-
-  commentsSharedCollection: IComment[] = [];
-  postsSharedCollection: IPost[] = [];
-  ngelmakAccountsSharedCollection: INgelmakAccount[] = [];
-
-  protected dataUtils = inject(DataUtils);
-  protected eventManager = inject(EventManager);
-  protected commentService = inject(CommentService);
-  protected commentFormService = inject(CommentFormService);
-  protected postService = inject(PostService);
-  protected ngelmakAccountService = inject(NgelmakAccountService);
-  protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: CommentFormGroup = this.commentFormService.createCommentFormGroup();
-
-  compareComment = (o1: IComment | null, o2: IComment | null): boolean => this.commentService.compareComment(o1, o2);
-
-  comparePost = (o1: IPost | null, o2: IPost | null): boolean => this.postService.comparePost(o1, o2);
-
-  compareNgelmakAccount = (o1: INgelmakAccount | null, o2: INgelmakAccount | null): boolean =>
-    this.ngelmakAccountService.compareNgelmakAccount(o1, o2);
-
-  ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ comment }) => {
-      this.comment = comment;
-      if (comment) {
-        this.updateForm(comment);
-      }
-
-      this.loadRelationshipsOptions();
-    });
+export class CommentUpdateComponent implements AfterViewInit {
+  /**
+   * *bold*
+   * _underline_
+   * ~italics~
+   * -delete-
+   * @param text
+   * @returns
+   */
+  format(text: string): string {
+    return text
+      .replace(/\*(.*?)\*/g, "<b>$1</b>") // -> bold
+      .replace(/_(.*?)_/g, "<u>$1</u>") // -> underline
+      .replace(/~(.*?)~/g, "<i>$1</i>") // -> italic
+      .replace(/-(.*?)-/g, "<del>$1</del>"); // -> delete
   }
 
-  byteSize(base64String: string): string {
-    return this.dataUtils.byteSize(base64String);
+  @ViewChild("nkeditor", { static: false }) nkeditor: ElementRef<HTMLElement>;
+  commentService = inject(CommentService);
+  alertService = inject(AlertService);
+
+  @Input() comment: IComment = null;
+  @Input() post: IPost;
+  @Output() onSaveSuccess = new EventEmitter<IComment>();
+
+  file: File = null;
+  isSaving = signal(false);
+  isEmpty = signal(true);
+  imageSrc = signal(null);
+  editor: HTMLElement = null;
+
+  ngAfterViewInit(): void {
+    this.editor = this.nkeditor.nativeElement.querySelector(".nk-editor");
+    if (this.comment) {
+      this.editor.innerHTML = this.comment.content;
+      this.imageSrc.set(this.comment.url || null);
+      this.updateEditorView();
+    }
+    // Function to check if the editor is empty
+    this.editor.addEventListener("input", () => this.updateEditorView());
   }
 
-  openFile(base64String: string, contentType: string | null | undefined): void {
-    this.dataUtils.openFile(base64String, contentType);
-  }
-
-  setFileData(event: Event, field: string, isImage: boolean): void {
-    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
-      error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<IAlert>('ngelmakprojectApp.error', {type: "error"})),
-    });
-  }
-
-  // setFileData(event: Event, field: string, isImage: boolean): void {
-  //   this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
-  //     error: (err: FileLoadError) =>
-  //       this.eventManager.broadcast(new EventWithContent<AlertError>('ngelmakprojectApp.error', { ...err, key: 'error.file.' + err.key })),
-  //   });
-  // }
-
-  previousState(): void {
-    window.history.back();
-  }
-
-  save(): void {
-    this.isSaving = true;
-    const comment = this.commentFormService.getComment(this.editForm);
-    if (comment.id !== null) {
-      this.subscribeToSaveResponse(this.commentService.update(comment));
+  private updateEditorView() {
+    const content = this.editor.textContent.trim(); // Trim spaces and line breaks
+    if (content == "") {
+      this.isEmpty.set(true);
+      // If the content is empty, add the 'placeholder' class
+      this.editor.classList.add("placeholder");
     } else {
-      this.subscribeToSaveResponse(this.commentService.create(comment));
+      this.isEmpty.set(false);
+      // If the content is not empty, remove the 'placeholder' class
+      this.editor.classList.remove("placeholder");
     }
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IComment>>): void {
-    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-      next: () => this.onSaveSuccess(),
-      error: () => this.onSaveError(),
+  save() {
+    this.isSaving.set(true);
+    if (this.comment != null && this.comment.id != null) {
+      const comment = {
+        ...this.comment,
+        post: { id: this.post.id },
+        content: this.editor.innerHTML,
+      } as IComment;
+      if (!this.imageSrc()) comment.url = null; // no image chosen.
+      this.subscribeToSaveResponse(
+        this.commentService.update(comment, this.file)
+      );
+    } else {
+      const comment = {
+        post: { id: this.post.id },
+        content: this.editor.innerHTML,
+      } as IComment;
+      this.subscribeToSaveResponse(
+        this.commentService.create(comment, this.file)
+      );
+    }
+  }
+
+  protected subscribeToSaveResponse(
+    result: Observable<EntityResponseType>
+  ): void {
+    result.pipe(finalize(() => this.isSaving.set(false))).subscribe({
+      next: ({ body }) => {
+        this.onSaveSuccess.emit(body);
+        this.editor.innerHTML = ""; // reset the editor.
+        this.remove();
+      },
+      error: () =>
+        this.alertService.addAlert({
+          type: "error",
+          message: "Une error s'est produit lors de la sauvegarde.",
+        }),
     });
   }
 
-  protected onSaveSuccess(): void {
-    this.previousState();
+  handleImage(event) {
+    this.file = event.target.files[0];
+    if (this.file) {
+      this.imageSrc.set(URL.createObjectURL(this.file));
+
+      // const reader = new FileReader();
+      // reader.onload = (e) => {
+      //   this.imageSrc.set(reader.result);
+      //   console.log(reader.result);
+
+      // };
+      // reader.readAsDataURL(this.file);
+    }
   }
 
-  protected onSaveError(): void {
-    // Api for inheritance.
-  }
-
-  protected onSaveFinalize(): void {
-    this.isSaving = false;
-  }
-
-  protected updateForm(comment: IComment): void {
-    this.comment = comment;
-    this.commentFormService.resetForm(this.editForm, comment);
-
-    this.commentsSharedCollection = this.commentService.addCommentToCollectionIfMissing<IComment>(
-      this.commentsSharedCollection,
-      comment.replayto,
-    );
-    this.postsSharedCollection = this.postService.addPostToCollectionIfMissing<IPost>(this.postsSharedCollection, comment.post);
-    this.ngelmakAccountsSharedCollection = this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
-      this.ngelmakAccountsSharedCollection,
-      comment.account,
-    );
-  }
-
-  protected loadRelationshipsOptions(): void {
-    this.commentService
-      .query()
-      .pipe(map((res: HttpResponse<IComment[]>) => res.body ?? []))
-      .pipe(map((comments: IComment[]) => this.commentService.addCommentToCollectionIfMissing<IComment>(comments, this.comment?.replayto)))
-      .subscribe((comments: IComment[]) => (this.commentsSharedCollection = comments));
-
-    this.postService
-      .query()
-      .pipe(map((res: HttpResponse<IPost[]>) => res.body ?? []))
-      .pipe(map((posts: IPost[]) => this.postService.addPostToCollectionIfMissing<IPost>(posts, this.comment?.post)))
-      .subscribe((posts: IPost[]) => (this.postsSharedCollection = posts));
-
-    this.ngelmakAccountService
-      .query()
-      .pipe(map((res: HttpResponse<INgelmakAccount[]>) => res.body ?? []))
-      .pipe(
-        map((ngelmakAccounts: INgelmakAccount[]) =>
-          this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(ngelmakAccounts, this.comment?.account),
-        ),
-      )
-      .subscribe((ngelmakAccounts: INgelmakAccount[]) => (this.ngelmakAccountsSharedCollection = ngelmakAccounts));
+  remove() {
+    this.file = null;
+    this.imageSrc.set(null);
   }
 }
