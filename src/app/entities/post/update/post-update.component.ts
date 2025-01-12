@@ -1,11 +1,10 @@
-import { IPost } from "app/entities/post/post.model";
-import { Component, inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
+import { Component, inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { IPost } from "app/entities/post/post.model";
 import { Observable } from "rxjs";
 import { finalize } from "rxjs/operators";
 
-import SharedModule from "app/shared/shared.module";
 import {
   FormControl,
   FormGroup,
@@ -13,26 +12,26 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
+import SharedModule from "app/shared/shared.module";
 
+import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { DataUtils, FileLoadError } from "app/core/util/data-util.service";
 import {
   EventManager,
   EventWithContent,
 } from "app/core/util/event-manager.service";
-import { DataUtils, FileLoadError } from "app/core/util/data-util.service";
-import { INgelmakAccount } from "app/entities/ngelmak-account/ngelmak-account.model";
-import { NgelmakAccountService } from "app/entities/ngelmak-account/ngelmak-account.service";
+import { IAttachment } from "app/entities/attachment/attachment.model";
+import { AttachmentUpdateComponent } from "app/entities/attachment/update/attachment-update.component";
+import { Status } from "app/entities/enumerations/status.model";
 import { Subject } from "app/entities/enumerations/subject.model";
 import { Visibility } from "app/entities/enumerations/visibility.model";
-import { Status } from "app/entities/enumerations/status.model";
-import { PostService } from "../post.service";
-import { MatInputModule } from "@angular/material/input";
-import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
-import { MatIconModule } from "@angular/material/icon";
-import { MatSelectModule } from "@angular/material/select";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { AttachmentUpdateComponent } from "app/entities/attachment/update/attachment-update.component";
-import { IAttachment } from "app/entities/attachment/attachment.model";
+import { INkAccount } from "app/entities/nk-account/nk-account.model";
 import { IAlert } from "app/shared/alert/alert.service";
+import { PostService } from "../post.service";
 
 @Component({
   standalone: true,
@@ -55,7 +54,6 @@ export class PostUpdateComponent implements OnInit {
   private dataUtils = inject(DataUtils);
   private eventManager = inject(EventManager);
   private postService = inject(PostService);
-  private ngelmakAccountService = inject(NgelmakAccountService);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -78,7 +76,7 @@ export class PostUpdateComponent implements OnInit {
       ["clean"],
     ],
   };
-  ngelmakAccountsSharedCollection: INgelmakAccount[] = [];
+  nkAccountsSharedCollection: INkAccount[] = [];
 
   postForm = new FormGroup({
     id: new FormControl(null),
@@ -182,23 +180,23 @@ export class PostUpdateComponent implements OnInit {
     this.post = post;
     // this.postFormService.resetForm(this.postForm, post);
 
-    this.ngelmakAccountsSharedCollection =
-      this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(
-        this.ngelmakAccountsSharedCollection,
-        post.account
-      );
+    // this.nkAccountsSharedCollection =
+    //   this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    //     this.nkAccountsSharedCollection,
+    //     post.account
+    //   );
   }
 
   protected loadRelationshipsOptions(): void {
-    // this.ngelmakAccountService
+    // this.nkAccountService
     //   .query()
-    //   .pipe(map((res: HttpResponse<INgelmakAccount[]>) => res.body ?? []))
+    //   .pipe(map((res: HttpResponse<INkAccount[]>) => res.body ?? []))
     //   .pipe(
-    //     map((ngelmakAccounts: INgelmakAccount[]) =>
-    //       this.ngelmakAccountService.addNgelmakAccountToCollectionIfMissing<INgelmakAccount>(ngelmakAccounts, this.post?.account),
+    //     map((nkAccounts: INkAccount[]) =>
+    //       this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(nkAccounts, this.post?.account),
     //     ),
     //   )
-    //   .subscribe((ngelmakAccounts: INgelmakAccount[]) => (this.ngelmakAccountsSharedCollection = ngelmakAccounts));
+    //   .subscribe((nkAccounts: INkAccount[]) => (this.nkAccountsSharedCollection = nkAccounts));
   }
 
   protected addkeyword(event: MatChipInputEvent) {

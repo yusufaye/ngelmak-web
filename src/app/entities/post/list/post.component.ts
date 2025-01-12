@@ -1,38 +1,38 @@
-import { Component, NgZone, inject, OnInit } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
-import { combineLatest, Observable, Subscription, tap } from 'rxjs';
+import { Component, inject, NgZone, OnInit, signal } from "@angular/core";
+import {
+  ActivatedRoute,
+  Data,
+  ParamMap,
+  Router,
+  RouterModule,
+} from "@angular/router";
+import { combineLatest, Subscription, tap } from "rxjs";
 
-import SharedModule from 'app/shared/shared.module';
-import { sortStateSignal, SortDirective, SortByDirective, type SortState, SortService } from 'app/shared/sort';
-import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
-import { ItemCountComponent } from 'app/shared/pagination';
-import { FormsModule } from '@angular/forms';
-import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
-import { SORT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { DataUtils } from 'app/core/util/data-util.service';
-import { IPost } from '../post.model';
+import { FormsModule } from "@angular/forms";
+import { DEFAULT_SORT_DATA, SORT } from "app/config/navigation.constants";
+import { ITEMS_PER_PAGE, PAGE_HEADER } from "app/config/pagination.constants";
+import { DataUtils } from "app/core/util/data-util.service";
+import SharedModule from "app/shared/shared.module";
+import { SortService, sortStateSignal, type SortState } from "app/shared/sort";
+import { IPost } from "../post.model";
 
-import { EntityArrayResponseType, PostService } from '../post.service';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-
+import { HttpResponse } from "@angular/common/http";
+import { MatCardModule } from "@angular/material/card";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { IPage } from "app/shared/pagination/pagination.model";
+import { PostService } from "../post.service";
+import { DurationPipe } from "app/shared/date";
 
 @Component({
   standalone: true,
-  selector: 'app-post',
-  templateUrl: './post.component.html',
+  selector: "app-post",
+  templateUrl: "./post.component.html",
   imports: [
     RouterModule,
     FormsModule,
     SharedModule,
-    SortDirective,
-    SortByDirective,
     DurationPipe,
-    FormatMediumDatetimePipe,
-    FormatMediumDatePipe,
-    ItemCountComponent,
     MatDividerModule,
     MatCardModule,
     MatIconModule,
@@ -40,8 +40,10 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class PostComponent implements OnInit {
   subscription: Subscription | null = null;
-  posts?: IPost[];
-  isLoading = false;
+  posts = signal<IPost[]>(null);
+  hasPrevious = signal(false);
+  hasNext = signal(false);
+  isLoading = signal(false);
 
   sortState = sortStateSignal({});
 
@@ -60,18 +62,17 @@ export class PostComponent implements OnInit {
   trackId = (_index: number, item: IPost) => item.id;
 
   ngOnInit(): void {
-    this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
+    this.subscription = combineLatest([
+      this.activatedRoute.queryParamMap,
+      this.activatedRoute.data,
+    ])
       .pipe(
-        tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-        tap(() => this.load()),
+        tap(([params, data]) =>
+          this.fillComponentAttributeFromRoute(params, data)
+        ),
+        tap(() => this.loadAll())
       )
       .subscribe();
-    // this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
-    //   .pipe(
-    //     tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-    //     tap(() => this.load()),
-    //   )
-    //   .subscribe();
   }
 
   byteSize(base64String: string): string {
@@ -82,34 +83,20 @@ export class PostComponent implements OnInit {
     return this.dataUtils.openFile(base64String, contentType);
   }
 
-  delete(post: IPost): void {
-    // const modalRef = this.modalService.open(PostDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
-    // modalRef.componentInstance.post = post;
-    // // unsubscribe not needed because closed completes on modal close
-    // modalRef.closed
-    //   .pipe(
-    //     filter(reason => reason === ITEM_DELETED_EVENT),
-    //     tap(() => this.load()),
-    //   )
-    //   .subscribe();
-  }
-
-  load(): void {
+  loadAll(): void {
     const { page } = this;
-
-    this.isLoading = true;
+    this.isLoading.set(true);
     const pageToLoad: number = page;
-    const queryObject: any = {
+    const req = {
       page: pageToLoad - 1,
       size: this.itemsPerPage,
       sort: this.sortService.buildSortParam(this.sortState()),
     };
-
-    this.postService.query(queryObject).subscribe({
-      next: (res: EntityArrayResponseType) => {
+    this.postService.query(req).subscribe({
+      next: (res: HttpResponse<IPage<IPost>>) => {
         this.onResponseSuccess(res);
       },
-      complete:() =>  (this.isLoading = false),
+      complete: () => this.isLoading.set(false),
     });
   }
 
@@ -121,16 +108,25 @@ export class PostComponent implements OnInit {
     this.handleNavigation(page, this.sortState());
   }
 
-  protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
+  protected fillComponentAttributeFromRoute(
+    params: ParamMap,
+    data: Data
+  ): void {
     const page = params.get(PAGE_HEADER);
     this.page = +(page ?? 1);
-    this.sortState.set(this.sortService.parseSortParam(params.get(SORT) ?? data[DEFAULT_SORT_DATA]));
+    this.sortState.set(
+      this.sortService.parseSortParam(
+        params.get(SORT) ?? data[DEFAULT_SORT_DATA]
+      )
+    );
   }
 
-  protected onResponseSuccess(response: EntityArrayResponseType): void {
-    const { headers, body } = response;
-    this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
-    this.posts = body ?? [];
+  protected onResponseSuccess(response: HttpResponse<IPage<IPost>>): void {
+    const { body } = response;
+    this.hasNext.set(body.hasNext);
+    this.hasPrevious.set(body.hasPrevious);
+    this.totalItems = body.totalElements;
+    this.posts.set(body.content ?? []);
   }
 
   protected handleNavigation(page: number, sortState: SortState): void {
@@ -141,7 +137,7 @@ export class PostComponent implements OnInit {
     };
 
     this.ngZone.run(() => {
-      this.router.navigate(['./'], {
+      this.router.navigate(["./"], {
         relativeTo: this.activatedRoute,
         queryParams: queryParamsObj,
       });
