@@ -1,3 +1,4 @@
+import { query } from "@angular/animations";
 import { Component, inject, NgZone, OnInit, signal } from "@angular/core";
 import {
   ActivatedRoute,
@@ -20,9 +21,9 @@ import { HttpResponse } from "@angular/common/http";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
+import { DurationPipe } from "app/shared/date";
 import { IPage } from "app/shared/pagination/pagination.model";
 import { PostService } from "../post.service";
-import { DurationPipe } from "app/shared/date";
 
 @Component({
   standalone: true,
@@ -50,6 +51,7 @@ export class PostComponent implements OnInit {
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
   page = 1;
+  query = "";
 
   public router = inject(Router);
   protected postService = inject(PostService);
@@ -59,38 +61,27 @@ export class PostComponent implements OnInit {
 
   protected ngZone = inject(NgZone);
 
-  trackId = (_index: number, item: IPost) => item.id;
-
   ngOnInit(): void {
-    this.subscription = combineLatest([
-      this.activatedRoute.queryParamMap,
-      this.activatedRoute.data,
-    ])
+    this.subscription = combineLatest([this.activatedRoute.queryParamMap])
       .pipe(
-        tap(([params, data]) =>
-          this.fillComponentAttributeFromRoute(params, data)
-        ),
+        tap(([params]) => {
+          this.query = params.get("q");
+          const page = params.get(PAGE_HEADER);
+          this.page = +(page ?? 1);
+        }),
         tap(() => this.loadAll())
       )
       .subscribe();
   }
 
-  byteSize(base64String: string): string {
-    return this.dataUtils.byteSize(base64String);
-  }
-
-  openFile(base64String: string, contentType: string | null | undefined): void {
-    return this.dataUtils.openFile(base64String, contentType);
-  }
-
   loadAll(): void {
-    const { page } = this;
+    const { page, query } = this;
     this.isLoading.set(true);
     const pageToLoad: number = page;
     const req = {
       page: pageToLoad - 1,
       size: this.itemsPerPage,
-      sort: this.sortService.buildSortParam(this.sortState()),
+      q: query,
     };
     this.postService.query(req).subscribe({
       next: (res: HttpResponse<IPage<IPost>>) => {
@@ -100,25 +91,16 @@ export class PostComponent implements OnInit {
     });
   }
 
+  search(query: string): void {
+    this.handleNavigation(this.page, query);
+  }
+
   navigateToWithComponentValues(event: SortState): void {
-    this.handleNavigation(this.page, event);
+    this.handleNavigation(this.page);
   }
 
   navigateToPage(page: number): void {
-    this.handleNavigation(page, this.sortState());
-  }
-
-  protected fillComponentAttributeFromRoute(
-    params: ParamMap,
-    data: Data
-  ): void {
-    const page = params.get(PAGE_HEADER);
-    this.page = +(page ?? 1);
-    this.sortState.set(
-      this.sortService.parseSortParam(
-        params.get(SORT) ?? data[DEFAULT_SORT_DATA]
-      )
-    );
+    this.handleNavigation(page, this.query);
   }
 
   protected onResponseSuccess(response: HttpResponse<IPage<IPost>>): void {
@@ -129,13 +111,8 @@ export class PostComponent implements OnInit {
     this.posts.set(body.content ?? []);
   }
 
-  protected handleNavigation(page: number, sortState: SortState): void {
-    const queryParamsObj = {
-      page,
-      size: this.itemsPerPage,
-      sort: this.sortService.buildSortParam(sortState),
-    };
-
+  protected handleNavigation(page: number, query?: string): void {
+    const queryParamsObj = { q: query, page, size: this.itemsPerPage };
     this.ngZone.run(() => {
       this.router.navigate(["./"], {
         relativeTo: this.activatedRoute,

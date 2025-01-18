@@ -96,6 +96,14 @@ export class PostService {
     });
   }
 
+  search(req?: any): Observable<HttpResponse<IPage<IPost>>> {
+    const options = createRequestOption(req);
+    return this.http.get<IPage<IPost>>(`${this.resourceUrl}/search`, {
+      params: options,
+      observe: "response",
+    });
+  }
+
   query(req?: any): Observable<HttpResponse<IPage<IPost>>> {
     const options = createRequestOption(req);
     return this.http.get<IPage<IPost>>(this.resourceUrl, {
