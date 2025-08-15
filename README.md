@@ -1,3 +1,6 @@
+# [Opposition to apartheid
+](https://www.britannica.com/topic/apartheid/Opposition-to-apartheid)
+
 # NgelmakProjectWeb
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.4.

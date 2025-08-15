@@ -1,11 +1,11 @@
 import {
   DomSanitizer
 } from "./chunk-RGNOUNHN.js";
-import "./chunk-LSPQIQ2T.js";
 import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR
 } from "./chunk-HFU3RA37.js";
+import "./chunk-LSPQIQ2T.js";
 import {
   DOCUMENT,
   NgClass,

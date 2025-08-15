@@ -45,14 +45,14 @@
                 <span class="p-1" class="sort"></span>
               </div>
             </th>
-            <th scope="col" ngelmakSortBy="foregroundPicture">
+            <th scope="col" ngelmakSortBy="avatar">
               <div class="d-flex">
                 <span >Foreground Picture</span>
 
                 <span class="p-1" class="sort"></span>
               </div>
             </th>
-            <th scope="col" ngelmakSortBy="backgroundPicture">
+            <th scope="col" ngelmakSortBy="banner">
               <div class="d-flex">
                 <span >Background Picture</span>
 
@@ -95,8 +95,8 @@
                 <a [routerLink]="['/nk-account', nkAccount.id, 'view']">{{ nkAccount.id }}</a>
               </td>
               <td>{{ nkAccount.name }}</td>
-              <td>{{ nkAccount.foregroundPicture }}</td>
-              <td>{{ nkAccount.backgroundPicture }}</td>
+              <td>{{ nkAccount.avatar }}</td>
+              <td>{{ nkAccount.banner }}</td>
               <td >
                 {{
                   { null: '', DEFAULT: 'DEFAULT', PUBLIC: 'PUBLIC', PRIVATE: 'PRIVATE', AUTHORITY: 'AUTHORITY', JURNALIST: 'JURNALIST' }[

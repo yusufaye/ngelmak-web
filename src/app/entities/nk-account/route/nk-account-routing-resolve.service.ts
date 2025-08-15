@@ -1,14 +1,14 @@
-import { inject } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { of, EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { INkAccount } from '../nk-account.model';
+import { INkAccount } from 'app/entities/models/nk-account.model';
 import { NkAccountService } from '../nk-account.service';
 
 const nkAccountResolve = (route: ActivatedRouteSnapshot): Observable<null | INkAccount> => {
-  const id = route.params['id'];
+  const id: number = Number(route.params['id'].split('-')[0]);
   if (id) {
     return inject(NkAccountService)
       .find(id)

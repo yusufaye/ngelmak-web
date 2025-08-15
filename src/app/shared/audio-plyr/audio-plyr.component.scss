@@ -14,7 +14,7 @@
   @apply flex items-center justify-between gap-1 rounded-md p-2 px-4 hover:bg-cyan-400 text-xs font-medium text-gray-900 dark:text-white cursor-pointer hover:text-white transition-[background-color,text-color];
 }
 
-input[type='radio'] {
-  @apply appearance-none flex items-center justify-center w-4 h-4 rounded-full outline-none border-2 focus:border-cyan-500 dark:focus:border-cyan-600 checked:border-cyan-500 dark:checked:border-cyan-600;
-  @apply before:block before:w-2 before:h-2 before:rounded-full focus:before:bg-cyan-500 dark:focus:before:bg-cyan-600 checked:before:bg-cyan-500 dark:checked:before:bg-cyan-600;
-}
+// input[type='radio'] {
+//   @apply appearance-none flex items-center justify-center w-4 h-4 rounded-full outline-none border-2 focus:border-cyan-500 dark:focus:border-cyan-600 checked:border-cyan-500 dark:checked:border-cyan-600;
+//   @apply before:block before:w-2 before:h-2 before:rounded-full focus:before:bg-cyan-500 dark:focus:before:bg-cyan-600 checked:before:bg-cyan-500 dark:checked:before:bg-cyan-600;
+// }

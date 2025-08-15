@@ -1,6 +1,6 @@
 import { IUser } from 'app/entities/user/user.model';
 import { GrantStatus } from "../enumerations/grant-status.model";
-import { IPrivilege } from "../privilege/privilege.model";
+import { IPrivilege } from "../models/nk-privilege.model";
 
 export interface IUserPrivilege {
   id?: number | null;

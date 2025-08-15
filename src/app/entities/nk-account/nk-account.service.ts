@@ -4,8 +4,8 @@ import { catchError, Observable, of, tap } from "rxjs";
 
 import { ApplicationConfigService } from "app/core/config/application-config.service";
 import { createRequestOption } from "app/core/request/request-util";
-import { IHttpRestApiService } from "app/entities/entity.service";
-import { INkAccount } from "./nk-account.model";
+import { INkAccount } from "app/entities/models/nk-account.model";
+import { IHttpRestApiService } from "../entity.service";
 
 export type EntityResponseType = HttpResponse<INkAccount>;
 export type EntityArrayResponseType = HttpResponse<INkAccount[]>;
@@ -19,13 +19,13 @@ export class NkAccountService implements IHttpRestApiService<INkAccount> {
   private applicationConfigService = inject(ApplicationConfigService);
 
   protected resourceUrl =
-    this.applicationConfigService.getEndpointFor("api/nk-accounts");
+    this.applicationConfigService.getEndpointFor("api/accounts");
 
   trackCurrentUser(): Signal<INkAccount | null> {
     return this.nkAccount.asReadonly();
   }
 
-  getAuthenticatedNkAccount(force?: boolean): Observable<INkAccount | null> {
+  currentNkAccount(force?: boolean): Observable<INkAccount | null> {
     if (!this.nkAccountCache$ || force) {
       this.nkAccountCache$ = this.findByCurrentUser().pipe(
         tap((nkAccount: INkAccount) => {
@@ -37,6 +37,13 @@ export class NkAccountService implements IHttpRestApiService<INkAccount> {
       );
     }
     return this.nkAccountCache$.pipe(catchError(() => of(null)));
+  }
+
+  setNkAccount(nkAccount: INkAccount): void {
+    this.nkAccount.set(nkAccount);
+    if (!nkAccount) {
+      this.nkAccountCache$ = null;
+    }
   }
 
   findByCurrentUser(): Observable<INkAccount> {
@@ -53,6 +60,30 @@ export class NkAccountService implements IHttpRestApiService<INkAccount> {
     return this.http.put<INkAccount>(this.resourceUrl, nkAccount, {
       observe: "response",
     });
+  }
+
+  updateAvatar(file: File): Observable<EntityResponseType> {
+    const data: FormData = new FormData();
+    data.append("file", file);
+    return this.http.put<INkAccount>(
+      `${this.resourceUrl}/upload-avatar`,
+      data,
+      {
+        observe: "response",
+      }
+    );
+  }
+
+  updateBanner(file: File): Observable<EntityResponseType> {
+    const data: FormData = new FormData();
+    data.append("file", file);
+    return this.http.put<INkAccount>(
+      `${this.resourceUrl}/upload-banner`,
+      data,
+      {
+        observe: "response",
+      }
+    );
   }
 
   partialUpdate(nkAccount: INkAccount): Observable<EntityResponseType> {

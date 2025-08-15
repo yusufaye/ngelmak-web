@@ -5,8 +5,8 @@ import SharedModule from "app/shared/shared.module";
 
 import { MatDialog } from "@angular/material/dialog";
 import { Account } from "app/core/auth/account.model";
-import { IPrivilege } from "app/entities/privilege/privilege.model";
-import { PrivilegeService } from "app/entities/privilege/service/privilege.service";
+import { IPrivilege } from "app/entities/models/nk-privilege.model";
+import { PrivilegeService } from "app/entities/nk-privilege/service/nk-privilege.service";
 import { AlertService } from "app/shared/alert/alert.service";
 import { CertificationResetComponent } from "./certification-reset/certification-reset.component";
 import { CertificationComponent } from "./certification/certification.component";

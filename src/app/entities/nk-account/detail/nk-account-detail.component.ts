@@ -1,18 +1,55 @@
-import { Component, input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject, signal } from "@angular/core";
 
-import SharedModule from 'app/shared/shared.module';
-import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
-import { INkAccount } from '../nk-account.model';
+import { CommonModule } from "@angular/common";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { RouterModule } from "@angular/router";
+import { AlertService } from "app/shared/alert/alert.service";
+import { finalize } from "rxjs";
+import { NkAccountService } from "../nk-account.service";
 
 @Component({
   standalone: true,
-  selector: 'app-nk-account-detail',
-  templateUrl: './nk-account-detail.component.html',
-  imports: [SharedModule, RouterModule, DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe],
+  selector: "app-nk-account-detail",
+  templateUrl: "./nk-account-detail.component.html",
+  imports: [CommonModule, RouterModule, MatTooltipModule],
 })
 export class NkAccountDetailComponent {
-  nkAccount = input<INkAccount | null>(null);
+  alertService = inject(AlertService);
+  nkAccountService = inject(NkAccountService);
+  nkAccount = inject(NkAccountService).trackCurrentUser();
+  isUploading = signal(false);
+  editAvatar = signal(false);
+  imageSrc = signal(null);
+  file: File;
+
+  uploadAvatar() {
+    this.isUploading.set(true);
+    if (this.file) {
+      this.nkAccountService
+        .updateAvatar(this.file)
+        .pipe(finalize(() => this.isUploading.set(false)))
+        .subscribe({
+          next: (res) => {
+            this.nkAccountService.setNkAccount(res.body);
+            this.editAvatar.set(false);
+            this.imageSrc.set(null);
+          },
+          error: () =>
+            this.alertService.addAlert({
+              type: "error",
+              message: "Une erreur s'est produite lors de la mise à jour.",
+            }),
+        });
+    }
+  }
+
+  handleImage(event) {
+    this.editAvatar.set(true);
+    this.file = event.target.files[0];
+    if (this.file) {
+      this.imageSrc.set(URL.createObjectURL(this.file));
+    }
+  }
 
   previousState(): void {
     window.history.back();

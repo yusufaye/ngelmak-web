@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import SharedModule from 'app/shared/shared.module';
 
-import { INkAccount } from '../nk-account.model';
+import { INkAccount } from 'app/entities/models/nk-account.model';
 import { NkAccountService } from '../nk-account.service';
 
 @Component({

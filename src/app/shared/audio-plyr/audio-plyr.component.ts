@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, Input, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
-import { fadeInRight400ms } from '../animations/fade-in-right.animation';
-import { fadeInUp400ms } from '../animations/fade-in-up.animation';
-import { ClickOutsideDirective } from '../directives/click-outside.directive';
-import { IAttachment } from 'app/entities/attachment/attachment.model';
-import { AttachmentService } from 'app/entities/attachment/service/attachment.service';
+import { CommonModule } from "@angular/common";
+import { AfterViewInit, Component, ElementRef, inject, Input, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
+import { IFile } from "app/entities/models/nk-file.model";
+import { FileService } from "app/entities/nk-file/service/nk-file.service";
+import { fadeInRight400ms } from "../animations/fade-in-right.animation";
+import { fadeInUp400ms } from "../animations/fade-in-up.animation";
+import { ClickOutsideDirective } from "../directives/click-outside.directive";
 
 /**
  * This component is used for playing mp3 soung.
@@ -27,11 +27,11 @@ import { AttachmentService } from 'app/entities/attachment/service/attachment.se
   animations: [fadeInRight400ms, fadeInUp400ms],
 })
 export class AudioPlyrComponent implements OnInit, AfterViewInit, OnDestroy {
-  private attachmentService = inject(AttachmentService);
+  private fileService = inject(FileService);
 
   @Input() source: Blob = null;
-  @Input() sourceURL: string = null;
-  @Input() attachment: IAttachment = null;
+  @Input() url: string = null;
+  @Input() file: IFile = null;
   private audio: HTMLAudioElement = null;
   private audioContext: AudioContext = null;
   private track: MediaElementAudioSourceNode = null;
@@ -69,9 +69,9 @@ export class AudioPlyrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.sourceURL == null && this.source == null) {
+    if (this.url == null && this.source == null) {
       this.plyrCurrentTime = this.format(0);
-      this.plyrDuration = this.format(this.attachment.duration);
+      this.plyrDuration = this.format(this.file.duration);
     }
   }
 
@@ -80,8 +80,8 @@ export class AudioPlyrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   lazyload(): void {
-    this.attachmentService.getResource(this.attachment.id).subscribe(response => {
-      this.attachment.content = response;
+    this.fileService.getResource(this.file.id).subscribe(response => {
+      this.source = response;
       this.setup();
       this.togglePlay();
     });
@@ -99,10 +99,8 @@ export class AudioPlyrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setup(): void {
-    if (this.sourceURL == null && this.source) {
-      this.sourceURL = URL.createObjectURL(this.source);
-    } else if (this.attachment.content) {
-      this.sourceURL = URL.createObjectURL(this.attachment.content);
+    if (this.url == null && this.source) {
+      this.url = URL.createObjectURL(this.source);
     } else {
       console.log('Resource not set yet...');
       return;
@@ -112,7 +110,7 @@ export class AudioPlyrComponent implements OnInit, AfterViewInit, OnDestroy {
     this.progressFilled = this.plyr.nativeElement.querySelector('.ngelmak-plyr-progress-filled');
     this.volumeProgress = this.plyr.nativeElement.querySelector('.ngelmak-plyr-volume-progress');
     this.volumeProgressFilled = this.plyr.nativeElement.querySelector('.ngelmak-plyr-volume-progress-filled');
-    this.audio = new Audio(this.sourceURL);
+    this.audio = new Audio(this.url);
 
     this.audioContext = new AudioContext();
     // The volume can be manipulated using a GainNode, which represents how big our sound wave is.
@@ -157,8 +155,8 @@ export class AudioPlyrComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sourceURL) {
-      URL.revokeObjectURL(this.sourceURL);
+    if (this.url) {
+      URL.revokeObjectURL(this.url);
     }
   }
 
@@ -208,7 +206,7 @@ export class AudioPlyrComponent implements OnInit, AfterViewInit, OnDestroy {
   // Display currentTime and duration properties in real-time
   setTimes() {
     this.plyrCurrentTime = this.format(this.audio.currentTime);
-    const duration = this.audio.duration == Infinity ? this.attachment.duration : this.audio.duration
+    const duration = this.audio.duration == Infinity ? this.file.duration : this.audio.duration
     this.plyrDuration = this.format(duration);
   }
 

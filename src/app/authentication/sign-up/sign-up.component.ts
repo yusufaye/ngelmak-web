@@ -10,7 +10,7 @@ import {
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { Router, RouterModule } from "@angular/router";
-import PasswordStrengthBarComponent from "app/account-management/password/password-strength-bar/password-strength-bar.component";
+import PasswordStrengthBarComponent from "./password-strength-bar/password-strength-bar.component";
 import {
   EMAIL_ALREADY_USED_TYPE,
   LOGIN_ALREADY_USED_TYPE,

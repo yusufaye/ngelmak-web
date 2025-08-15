@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import SharedModule from 'app/shared/shared.module';
 
-import { IUserPrivilege } from '../nk-account-privilege.model';
-import { UserPrivilegeService } from '../service/nk-account-privilege.service';
+import { UserPrivilegeService } from '../service/user-privilege.service';
+import { IUserPrivilege } from '../user-privilege.model';
 
 @Component({
   standalone: true,
-  templateUrl: './nk-account-privilege-delete-dialog.component.html',
+  templateUrl: './user-privilege-delete-dialog.component.html',
   imports: [SharedModule, FormsModule],
 })
 export class UserPrivilegeDeleteDialogComponent {

@@ -14,7 +14,7 @@ export class UserPrivilegeService {
   protected http = inject(HttpClient);
   protected applicationConfigService = inject(ApplicationConfigService);
 
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/nk-account-privileges');
+  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/account-privileges');
 
   create(userPrivilege: IUserPrivilege): Observable<EntityResponseType> {
     return this.http

@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { UserManagementService } from 'app/admin/user-management/service/user-management.service';
-import { IPrivilege } from 'app/entities/privilege/privilege.model';
+import { IPrivilege } from 'app/entities/models/nk-privilege.model';
 import { AlertService } from 'app/shared/alert/alert.service';
 
 @Component({

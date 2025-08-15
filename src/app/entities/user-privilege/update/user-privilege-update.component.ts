@@ -1,22 +1,21 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { UserPrivilegeService } from "./../service/user-privilege.service";
+import { Component, inject, OnInit } from "@angular/core";
+import { HttpResponse } from "@angular/common/http";
+import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
+import { finalize } from "rxjs/operators";
 
-import SharedModule from 'app/shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import SharedModule from "app/shared/shared.module";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { Accessibility } from 'app/entities/enumerations/accessibility.model';
-import { Visibility } from 'app/entities/enumerations/visibility.model';
-import { IUserPrivilege } from '../nk-account-privilege.model';
-import { UserPrivilegeService } from '../service/nk-account-privilege.service';
-import { UserPrivilegeFormService, UserPrivilegeFormGroup } from './nk-account-privilege-form.service';
+import { Accessibility } from "app/entities/enumerations/accessibility.model";
+import { Visibility } from "app/entities/enumerations/visibility.model";
+import { IUserPrivilege } from "../user-privilege.model";
 
 @Component({
   standalone: true,
-  selector: 'app-nk-account-privilege-update',
-  templateUrl: './nk-account-privilege-update.component.html',
+  selector: "app-nk-user-privilege-update",
+  templateUrl: "./user-privilege-update.component.html",
   imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
 export class UserPrivilegeUpdateComponent implements OnInit {
@@ -26,11 +25,7 @@ export class UserPrivilegeUpdateComponent implements OnInit {
   visibilityValues = Object.keys(Visibility);
 
   protected userPrivilegeService = inject(UserPrivilegeService);
-  protected userPrivilegeFormService = inject(UserPrivilegeFormService);
   protected activatedRoute = inject(ActivatedRoute);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  editForm: UserPrivilegeFormGroup = this.userPrivilegeFormService.createUserPrivilegeFormGroup();
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ userPrivilege }) => {
@@ -47,15 +42,23 @@ export class UserPrivilegeUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const userPrivilege = this.userPrivilegeFormService.getUserPrivilege(this.editForm);
-    if (userPrivilege.id !== null) {
-      this.subscribeToSaveResponse(this.userPrivilegeService.update(userPrivilege));
-    } else {
-      this.subscribeToSaveResponse(this.userPrivilegeService.create(userPrivilege));
-    }
+    // const userPrivilege = this.userPrivilegeFormService.getUserPrivilege(
+    //   this.editForm
+    // );
+    // if (userPrivilege.id !== null) {
+    //   this.subscribeToSaveResponse(
+    //     this.userPrivilegeService.update(userPrivilege)
+    //   );
+    // } else {
+    //   this.subscribeToSaveResponse(
+    //     this.userPrivilegeService.create(userPrivilege)
+    //   );
+    // }
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IUserPrivilege>>): void {
+  protected subscribeToSaveResponse(
+    result: Observable<HttpResponse<IUserPrivilege>>
+  ): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
@@ -76,6 +79,6 @@ export class UserPrivilegeUpdateComponent implements OnInit {
 
   protected updateForm(userPrivilege: IUserPrivilege): void {
     this.userPrivilege = userPrivilege;
-    this.userPrivilegeFormService.resetForm(this.editForm, userPrivilege);
+    // this.userPrivilegeFormService.resetForm(this.editForm, userPrivilege);
   }
 }

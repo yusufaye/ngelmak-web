@@ -11,9 +11,8 @@ import { CommonModule } from "@angular/common";
 import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { Account } from "app/core/auth/account.model";
-import { IPrivilege } from "app/entities/privilege/privilege.model";
-import { PrivilegeService } from "app/entities/privilege/service/privilege.service";
+import { IPrivilege } from "app/entities/models/nk-privilege.model";
+import { PrivilegeService } from "app/entities/nk-privilege/service/nk-privilege.service";
 
 @Component({
   standalone: true,

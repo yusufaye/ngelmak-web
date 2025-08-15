@@ -1,18 +1,17 @@
-import { Component, NgZone, inject, OnInit } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
+import { Component, inject, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
-import { combineLatest, filter, Observable, Subscription, tap } from 'rxjs';
+import { combineLatest, Observable, Subscription, tap } from 'rxjs';
 
-import SharedModule from 'app/shared/shared.module';
-import { sortStateSignal, SortDirective, SortByDirective, type SortState, SortService } from 'app/shared/sort';
-import { DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe } from 'app/shared/date';
 import { FormsModule } from '@angular/forms';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
+import SharedModule from 'app/shared/shared.module';
+import { SortByDirective, SortDirective, SortService, sortStateSignal, type SortState } from 'app/shared/sort';
 
+import { DEFAULT_SORT_DATA, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
-import { SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { INkAccount } from '../nk-account.model';
 import { EntityArrayResponseType, NkAccountService } from '../nk-account.service';
-import { NkAccountDeleteDialogComponent } from '../delete/nk-account-delete-dialog.component';
+import { INkAccount } from 'app/entities/models/nk-account.model';
 
 @Component({
   standalone: true,

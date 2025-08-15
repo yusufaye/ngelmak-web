@@ -14,32 +14,32 @@ const entityRoutes: Routes = [
   {
     path: 'privilege',
     title: 'ngelmakprojectApp.privilege.home.title',
-    loadChildren: () => import('./privilege/privilege.routes'),
+    loadChildren: () => import('./nk-privilege/nk-privilege.routes'),
   },
   {
     path: 'config',
     title: 'ngelmakprojectApp.config.home.title',
-    loadChildren: () => import('./config/config.routes'),
+    loadChildren: () => import('./nk-config/nk-config.routes'),
   },
   {
     path: 'post',
     title: 'post',
-    loadChildren: () => import('./post/post.routes'),
+    loadChildren: () => import('./nk-post/nk-post.routes'),
   },
   {
     path: 'ticket',
     title: 'ngelmakprojectApp.ticket.home.title',
-    loadChildren: () => import('./ticket/ticket.routes'),
+    loadChildren: () => import('./nk-ticket/nk-ticket.routes'),
   },
   {
     path: 'review',
     title: 'ngelmakprojectApp.review.home.title',
-    loadChildren: () => import('./review/review.routes'),
+    loadChildren: () => import('./nk-review/nk-review.routes'),
   },
   {
     path: 'membership',
     title: 'ngelmakprojectApp.membership.home.title',
-    loadChildren: () => import('./membership/membership.routes'),
+    loadChildren: () => import('./nk-membership/nk-membership.routes'),
   },
 ];
 
