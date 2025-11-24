@@ -2,11 +2,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Account } from 'app/core/auth/account.model';
-import { AccountService } from 'app/core/auth/account.service';
+import { Authentication } from 'app/core/auth/auth.model';
+import { AuthenticationService } from "app/core/auth/auth.service";
 import { flashBoxShadow2000ms } from 'app/shared/animations/flash.animation';
 import SharedModule from 'app/shared/shared.module';
 import { finalize } from 'rxjs';
+;
 
 @Component({
   selector: 'app-user-update',
@@ -18,7 +19,7 @@ import { finalize } from 'rxjs';
 })
 export class UserUpdateComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
   isSaving = signal(false);
   flashBoxShadowState = null; // set to null to avoid flash box-shadow animation to first when the DOM starts.
 
@@ -37,7 +38,7 @@ export class UserUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving.set(true);
-    const account = this.accountForm.value as Account;
-    this.accountService.save(account).pipe(finalize(() => (this.isSaving.set(false)))).subscribe(() => (this.accountService.authenticate(account)));
+    const account = this.accountForm.value as Authentication;
+    // this.accountService.save(account).pipe(finalize(() => (this.isSaving.set(false)))).subscribe(() => (this.accountService.authenticate(account)));
   }
 }

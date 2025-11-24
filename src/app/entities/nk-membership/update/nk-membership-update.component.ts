@@ -7,9 +7,9 @@ import { finalize } from 'rxjs/operators';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import SharedModule from 'app/shared/shared.module';
 
-import { INkAccount } from 'app/entities/models/nk-account.model';
+import { IAccount } from 'app/entities/models/nk-account.model';
 import { IMembership } from 'app/entities/models/nk-membership.model';
-import { NkAccountService } from 'app/entities/nk-account/nk-account.service';
+import { AccountService } from 'app/entities/nk-account/nk-account.service';
 import { MembershipService } from '../service/nk-membership.service';
 import { MembershipFormGroup, MembershipFormService } from './nk-membership-form.service';
 
@@ -23,11 +23,11 @@ export class MembershipUpdateComponent implements OnInit {
   isSaving = false;
   membership: IMembership | null = null;
 
-  nkAccountsSharedCollection: INkAccount[] = [];
+  nkAccountsSharedCollection: IAccount[] = [];
 
   protected membershipService = inject(MembershipService);
   protected membershipFormService = inject(MembershipFormService);
-  protected nkAccountService = inject(NkAccountService);
+  protected nkAccountService = inject(AccountService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -82,7 +82,7 @@ export class MembershipUpdateComponent implements OnInit {
     // this.membership = membership;
     // this.membershipFormService.resetForm(this.editForm, membership);
 
-    // this.nkAccountsSharedCollection = this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    // this.nkAccountsSharedCollection = this.nkAccountService.addNkAccountToCollectionIfMissing<IAccount>(
     //   this.nkAccountsSharedCollection,
     //   membership.account,
     //   membership.subscriber,
@@ -92,16 +92,16 @@ export class MembershipUpdateComponent implements OnInit {
   protected loadRelationshipsOptions(): void {
     // this.nkAccountService
     //   .query()
-    //   .pipe(map((res: HttpResponse<INkAccount[]>) => res.body ?? []))
+    //   .pipe(map((res: HttpResponse<IAccount[]>) => res.body ?? []))
     //   .pipe(
-    //     map((nkAccounts: INkAccount[]) =>
-    //       this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    //     map((nkAccounts: IAccount[]) =>
+    //       this.nkAccountService.addNkAccountToCollectionIfMissing<IAccount>(
     //         nkAccounts,
     //         this.membership?.account,
     //         this.membership?.subscriber,
     //       ),
     //     ),
     //   )
-    //   .subscribe((nkAccounts: INkAccount[]) => (this.nkAccountsSharedCollection = nkAccounts));
+    //   .subscribe((nkAccounts: IAccount[]) => (this.nkAccountsSharedCollection = nkAccounts));
   }
 }

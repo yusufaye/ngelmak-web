@@ -1,4 +1,3 @@
-import { AlertService } from "./../shared/alert/alert.service";
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Component, inject, OnInit, signal } from "@angular/core";
@@ -7,11 +6,12 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { Router } from "@angular/router";
+import { AlertService } from "./../shared/alert/alert.service";
 
-import { AccountService } from "app/core/auth/account.service";
+import { AuthenticationService } from "app/core/auth/auth.service";
 import { ApplicationConfigService } from "app/core/config/application-config.service";
-import { INkAccount } from "app/entities/models/nk-account.model";
-import { NkAccountService } from "app/entities/nk-account/nk-account.service";
+import { IAccount } from "app/entities/models/nk-account.model";
+import { AccountService as NkAccountService } from "app/entities/nk-account/nk-account.service";
 import { finalize } from "rxjs";
 import { AccountCertificationRequest } from "./account-certification-request/account-certification-request.component";
 import { UserUpdateComponent } from "./user-update/user-update.component";
@@ -35,7 +35,7 @@ export default class UserAccountComponent implements OnInit {
   private applicationConfigService = inject(ApplicationConfigService);
   readonly dialog = inject(MatDialog);
   private router = inject(Router);
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
   private alertService = inject(AlertService);
   // private rootRenderer = inject(RendererFactory2);
   imageSrc = signal(null);
@@ -43,8 +43,8 @@ export default class UserAccountComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private nkAccountService = inject(NkAccountService);
-  account = inject(AccountService).trackCurrentAccount();
-  nkAccount = inject(AccountService).trackCurrentAccount();
+  account = inject(AuthenticationService).trackCurrentAuthentication();
+  nkAccount = inject(NkAccountService).trackCurrentAccount();
   isSaving = signal(false);
   isUploading = signal(false);
   flashBoxShadowState = null; // set to null to avoid flash box-shadow animation to first when the DOM starts.
@@ -65,7 +65,7 @@ export default class UserAccountComponent implements OnInit {
   save() {
     this.isSaving.set(true);
     this.flashBoxShadowState = true;
-    const nkAccount: INkAccount = this.nkAccountForm.value as INkAccount;
+    const nkAccount: IAccount = this.nkAccountForm.value as IAccount;
     this.nkAccountService
       .update(nkAccount)
       .pipe(finalize(() => this.isSaving.set(false)))

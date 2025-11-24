@@ -12,7 +12,7 @@ export enum DocType {
   PASSPORT = "PASSPORT",
 }
 
-export class Account {
+export class Authentication {
   constructor(
     public id?: number,
     public login?: string,

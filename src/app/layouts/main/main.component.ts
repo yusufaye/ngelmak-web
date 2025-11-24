@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AccountService } from 'app/core/auth/account.service';
+import { AuthenticationService } from "app/core/auth/auth.service";;
 
 @Component({
   selector: 'app-main',
@@ -11,7 +11,7 @@ export default class MainComponent implements OnInit {
   // private renderer: Renderer2;
 
   private router = inject(Router);
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
   // private rootRenderer = inject(RendererFactory2);
 
   constructor() {

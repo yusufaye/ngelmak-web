@@ -1,5 +1,5 @@
 import { Opinion } from 'app/entities/enumerations/opinion.model';
-import { INkAccount } from 'app/entities/models/nk-account.model';
+import { IAccount } from 'app/entities/models/nk-account.model';
 import { IPost } from 'app/entities/models/nk-post.model';
 
 export interface IComment {
@@ -11,5 +11,5 @@ export interface IComment {
   url?: string | null;
   post?: IPost | null;
   replayto?: IComment | null;
-  account?: INkAccount | null;
+  account?: IAccount | null;
 }

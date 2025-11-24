@@ -2,11 +2,11 @@ import { inject, isDevMode } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { map } from 'rxjs/operators';
 
-import { AccountService } from 'app/core/auth/account.service';
+import { AuthenticationService } from "app/core/auth/auth.service";;
 import { StateStorageService } from './state-storage.service';
 
 export const UserRouteAccessService: CanActivateFn = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  const accountService = inject(AccountService);
+  const accountService = inject(AuthenticationService);
   const router = inject(Router);
   const stateStorageService = inject(StateStorageService);
   return accountService.identity().pipe(

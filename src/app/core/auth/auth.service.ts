@@ -4,50 +4,53 @@ import { Router } from "@angular/router";
 import { Observable, of, ReplaySubject } from "rxjs";
 import { catchError, shareReplay, tap } from "rxjs/operators";
 
-import { Account } from "app/core/auth/account.model";
+import { Authentication } from "app/core/auth/auth.model";
 import { StateStorageService } from "app/core/auth/state-storage.service";
-import { ApplicationConfigService } from "../config/application-config.service";
+import { ApplicationConfigService } from "app/core/config/application-config.service";
 
 @Injectable({ providedIn: "root" })
-export class AccountService {
-  private userIdentity = signal<Account | null>(null);
-  private authenticationState = new ReplaySubject<Account | null>(1);
-  private accountCache$?: Observable<Account> | null;
+export class AuthenticationService {
+  private userIdentity = signal<Authentication | null>(null);
+  private authenticationState = new ReplaySubject<Authentication | null>(1);
+  private authCache$?: Observable<Authentication> | null;
 
   private http = inject(HttpClient);
   private router = inject(Router);
   private stateStorageService = inject(StateStorageService);
   private applicationConfigService = inject(ApplicationConfigService);
 
-  save(account: Account): Observable<{}> {
-    return this.http.post(
-      this.applicationConfigService.getEndpointFor("api/account"),
-      account
-    );
-  }
+  protected resourceUrl =
+    this.applicationConfigService.getEndpointFor("api/users");
+
+  // save(auth: Authentication): Observable<{}> {
+  //   return this.http.post(
+  //     this.applicationConfigService.getEndpointFor("api/auth"),
+  //     auth
+  //   );
+  // }
 
   requestCertification(request: {
     officialDocType;
     officialDocIdentification;
   }): Observable<{}> {
     return this.http.put(
-      `${this.applicationConfigService.getEndpointFor(
-        "api/account"
-      )}/account-request-certification`,
+      `${this.resourceUrl}/certifications/request`,
       request,
-      { observe: "response" }
+      {
+        observe: "response",
+      }
     );
   }
 
-  authenticate(identity: Account | null): void {
+  authenticate(identity: Authentication | null): void {
     this.userIdentity.set(identity);
     this.authenticationState.next(this.userIdentity());
     if (!identity) {
-      this.accountCache$ = null;
+      this.authCache$ = null;
     }
   }
 
-  trackCurrentAccount(): Signal<Account | null> {
+  trackCurrentAuthentication(): Signal<Authentication | null> {
     return this.userIdentity.asReadonly();
   }
 
@@ -64,39 +67,35 @@ export class AccountService {
     );
   }
 
-  identity(force?: boolean): Observable<Account | null> {
-    if (!this.accountCache$ || force) {
-      this.accountCache$ = this.fetchUserAccount().pipe(
-        tap((account: Account) => {
-          this.authenticate(account);
-
-          // After retrieve the account info, the language will be changed to
-          // the user's preferred language configured in the account setting
+  identity(force?: boolean): Observable<Authentication | null> {
+    if (!this.authCache$ || force) {
+      this.authCache$ = this.fetchUserAuthentication().pipe(
+        tap((auth: Authentication) => {
+          this.authenticate(auth);
+          // After retrieve the auth info, the language will be changed to
+          // the user's preferred language configured in the auth setting
           // unless user have choosed other language in the current session
           // if (!this.stateStorageService.getLocale()) {
-          //   this.translateService.use(account.langKey);
+          //   this.translateService.use(auth.langKey);
           // }
-
           this.navigateToStoredUrl();
         }),
         shareReplay()
       );
     }
-    return this.accountCache$.pipe(catchError(() => of(null)));
+    return this.authCache$.pipe(catchError(() => of(null)));
   }
 
   isAuthenticated(): boolean {
     return this.userIdentity() !== null;
   }
 
-  getAuthenticationState(): Observable<Account | null> {
+  getAuthenticationState(): Observable<Authentication | null> {
     return this.authenticationState.asObservable();
   }
 
-  private fetchUserAccount(): Observable<Account> {
-    return this.http.get<Account>(
-      this.applicationConfigService.getEndpointFor("api/account")
-    );
+  private fetchUserAuthentication(): Observable<Authentication> {
+    return this.http.get<Authentication>(this.resourceUrl);
   }
 
   private navigateToStoredUrl(): void {

@@ -85,7 +85,7 @@ export class ReviewUpdateComponent implements OnInit {
     // this.reviewFormService.resetForm(this.editForm, review);
 
     // this.reviewsSharedCollection = this.reviewService.addReviewToCollectionIfMissing<IReview>(this.reviewsSharedCollection, review.replyto);
-    // this.nkAccountsSharedCollection = this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(
+    // this.nkAccountsSharedCollection = this.nkAccountService.addNkAccountToCollectionIfMissing<IAccount>(
     //   this.nkAccountsSharedCollection,
     //   review.account,
     // );
@@ -101,13 +101,13 @@ export class ReviewUpdateComponent implements OnInit {
 
     // this.nkAccountService
     //   .query()
-    //   .pipe(map((res: HttpResponse<INkAccount[]>) => res.body ?? []))
+    //   .pipe(map((res: HttpResponse<IAccount[]>) => res.body ?? []))
     //   .pipe(
-    //     map((nkAccounts: INkAccount[]) =>
-    //       this.nkAccountService.addNkAccountToCollectionIfMissing<INkAccount>(nkAccounts, this.review?.account),
+    //     map((nkAccounts: IAccount[]) =>
+    //       this.nkAccountService.addNkAccountToCollectionIfMissing<IAccount>(nkAccounts, this.review?.account),
     //     ),
     //   )
-    //   .subscribe((nkAccounts: INkAccount[]) => (this.nkAccountsSharedCollection = nkAccounts));
+    //   .subscribe((nkAccounts: IAccount[]) => (this.nkAccountsSharedCollection = nkAccounts));
 
     // this.ticketService
     //   .query()

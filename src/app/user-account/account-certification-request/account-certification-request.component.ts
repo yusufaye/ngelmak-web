@@ -10,7 +10,7 @@ import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { AccountService } from "app/core/auth/account.service";
+import { AuthenticationService } from "app/core/auth/auth.service";
 import { IPrivilege } from "app/entities/models/nk-privilege.model";
 import { AlertService } from "app/shared/alert/alert.service";
 
@@ -30,7 +30,7 @@ import { AlertService } from "app/shared/alert/alert.service";
 export class AccountCertificationRequest {
   readonly dialogRef = inject(MatDialogRef<AccountCertificationRequest>);
 
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
   private alertService = inject(AlertService);
 
   privilegeForm = new FormGroup({

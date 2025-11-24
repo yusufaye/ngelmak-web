@@ -5,7 +5,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterModule } from "@angular/router";
 import { AlertService } from "app/shared/alert/alert.service";
 import { finalize } from "rxjs";
-import { NkAccountService } from "../nk-account.service";
+import { AccountService } from "../nk-account.service";
 
 @Component({
   standalone: true,
@@ -15,8 +15,8 @@ import { NkAccountService } from "../nk-account.service";
 })
 export class NkAccountDetailComponent {
   alertService = inject(AlertService);
-  nkAccountService = inject(NkAccountService);
-  nkAccount = inject(NkAccountService).trackCurrentUser();
+  nkAccountService = inject(AccountService);
+  nkAccount = inject(AccountService).trackCurrentAccount();
   isUploading = signal(false);
   editAvatar = signal(false);
   imageSrc = signal(null);

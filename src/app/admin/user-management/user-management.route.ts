@@ -2,13 +2,13 @@ import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, Routes } from "@angular/router";
 import { of } from "rxjs";
 
-import { Account } from "app/core/auth/account.model";
+import { Authentication } from "app/core/auth/auth.model";
 import UserManagementDetailComponent from "./detail/user-management-detail.component";
 import UserManagementComponent from "./list/user-management.component";
 import { UserManagementService } from "./service/user-management.service";
 import UserManagementUpdateComponent from "./update/user-management-update.component";
 
-export const UserManagementResolve: ResolveFn<Account | null> = (
+export const UserManagementResolve: ResolveFn<Authentication | null> = (
   route: ActivatedRouteSnapshot
 ) => {
   const login = route.paramMap.get("login");

@@ -1,14 +1,14 @@
 import {
+  computed,
   Directive,
+  effect,
   inject,
   input,
   TemplateRef,
   ViewContainerRef,
-  effect,
-  computed,
 } from "@angular/core";
 
-import { AccountService } from "app/core/auth/account.service";
+import { AuthenticationService } from "app/core/auth/auth.service";
 
 /**
  * @whatItDoes Conditionally includes an HTML element if current user has any
@@ -34,8 +34,8 @@ export default class HasAnyAuthorityDirective {
   private viewContainerRef = inject(ViewContainerRef);
 
   constructor() {
-    const accountService = inject(AccountService);
-    const currentAccount = accountService.trackCurrentAccount();
+    const accountService = inject(AuthenticationService);
+    const currentAccount = accountService.trackCurrentAuthentication();
     const hasPermission = computed(
       () =>
         currentAccount()?.authorities &&

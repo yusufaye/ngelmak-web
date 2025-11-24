@@ -10,8 +10,8 @@ import { SortByDirective, SortDirective, SortService, sortStateSignal, type Sort
 
 import { DEFAULT_SORT_DATA, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
-import { EntityArrayResponseType, NkAccountService } from '../nk-account.service';
-import { INkAccount } from 'app/entities/models/nk-account.model';
+import { EntityArrayResponseType, AccountService } from '../nk-account.service';
+import { IAccount } from 'app/entities/models/nk-account.model';
 
 @Component({
   standalone: true,
@@ -30,7 +30,7 @@ import { INkAccount } from 'app/entities/models/nk-account.model';
 })
 export class NkAccountComponent implements OnInit {
   subscription: Subscription | null = null;
-  nkAccounts?: INkAccount[];
+  nkAccounts?: IAccount[];
   isLoading = false;
 
   sortState = sortStateSignal({});
@@ -40,13 +40,13 @@ export class NkAccountComponent implements OnInit {
   page = 1;
 
   public router = inject(Router);
-  protected nkAccountService = inject(NkAccountService);
+  protected nkAccountService = inject(AccountService);
   protected activatedRoute = inject(ActivatedRoute);
   protected sortService = inject(SortService);
 
   protected ngZone = inject(NgZone);
 
-  // trackId = (_index: number, item: INkAccount): number => this.nkAccountService.getNkAccountIdentifier(item);
+  // trackId = (_index: number, item: IAccount): number => this.nkAccountService.getNkAccountIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
@@ -57,7 +57,7 @@ export class NkAccountComponent implements OnInit {
       .subscribe();
   }
 
-  delete(nkAccount: INkAccount): void {
+  delete(nkAccount: IAccount): void {
     // const modalRef = this.modalService.open(NkAccountDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     // modalRef.componentInstance.nkAccount = nkAccount;
     // // unsubscribe not needed because closed completes on modal close
@@ -97,7 +97,7 @@ export class NkAccountComponent implements OnInit {
     this.nkAccounts = dataFromBody;
   }
 
-  protected fillComponentAttributesFromResponseBody(data: INkAccount[] | null): INkAccount[] {
+  protected fillComponentAttributesFromResponseBody(data: IAccount[] | null): IAccount[] {
     return data ?? [];
   }
 

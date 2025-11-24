@@ -14,8 +14,8 @@ import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { SORT } from "app/config/navigation.constants";
 import { ITEMS_PER_PAGE } from "app/config/pagination.constants";
-import { Account } from "app/core/auth/account.model";
-import { AccountService } from "app/core/auth/account.service";
+import { Authentication } from "app/core/auth/auth.model";
+import { AuthenticationService } from "app/core/auth/auth.service";
 import { IPage } from "app/shared/pagination/pagination.model";
 import SharedModule from "app/shared/shared.module";
 import { SortService, sortStateSignal } from "app/shared/sort";
@@ -28,7 +28,7 @@ import { UserManagementService } from "../service/user-management.service";
   imports: [RouterModule, SharedModule, MatTooltipModule, MatPaginatorModule],
 })
 export default class UserManagementComponent implements OnInit, AfterViewInit {
-  currentAccount = inject(AccountService).trackCurrentAccount();
+  currentUser = inject(AuthenticationService).trackCurrentAuthentication();
   private router = inject(Router);
   private userService = inject(UserManagementService);
   private sortService = inject(SortService);
@@ -36,7 +36,7 @@ export default class UserManagementComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  users = signal<Account[] | null>(null);
+  users = signal<Authentication[] | null>(null);
   isLoading = signal(false);
   totalItems = signal(0);
   size = ITEMS_PER_PAGE;
@@ -67,13 +67,13 @@ export default class UserManagementComponent implements OnInit, AfterViewInit {
     this.handleNavigation();
   }
 
-  setActive(user: Account, isActivated: boolean): void {
+  setActive(user: Authentication, isActivated: boolean): void {
     this.userService
       .update({ ...user, activated: isActivated })
       .subscribe(() => this.loadAll());
   }
 
-  trackIdentity(_index: number, item: Account): number {
+  trackIdentity(_index: number, item: Authentication): number {
     return item.id!;
   }
 
@@ -86,7 +86,7 @@ export default class UserManagementComponent implements OnInit, AfterViewInit {
         sort: this.sortService.buildSortParam(this.sortState(), "id"),
       })
       .subscribe({
-        next: ({ body }: HttpResponse<IPage<Account>>) => {
+        next: ({ body }: HttpResponse<IPage<Authentication>>) => {
           this.isLoading.set(false);
           this.totalItems.set(Number(body.totalElements));
           this.users.set(body.content);

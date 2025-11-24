@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import SharedModule from 'app/shared/shared.module';
 import { UserManagementService } from '../service/user-management.service';
-import { Account } from 'app/core/auth/account.model';
+import { Authentication } from 'app/core/auth/auth.model';
 
 @Component({
   standalone: true,
@@ -13,7 +13,7 @@ import { Account } from 'app/core/auth/account.model';
   imports: [SharedModule, FormsModule],
 })
 export default class UserManagementDeleteDialogComponent {
-  user?: Account;
+  user?: Authentication;
 
   private userService = inject(UserManagementService);
 

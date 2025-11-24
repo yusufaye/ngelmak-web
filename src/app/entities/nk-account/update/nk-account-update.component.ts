@@ -10,12 +10,12 @@ import SharedModule from 'app/shared/shared.module';
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { Accessibility } from 'app/entities/enumerations/accessibility.model';
 import { Visibility } from 'app/entities/enumerations/visibility.model';
-import { INkAccount } from 'app/entities/models/nk-account.model';
+import { IAccount } from 'app/entities/models/nk-account.model';
 import { IConfig } from 'app/entities/models/nk-config.model';
 import { ConfigService } from 'app/entities/nk-config/service/nk-config.service';
 import { IUser } from 'app/entities/user/user.model';
 import dayjs from 'dayjs/esm';
-import { NkAccountService } from '../nk-account.service';
+import { AccountService } from '../nk-account.service';
 
 @Component({
   standalone: true,
@@ -25,13 +25,13 @@ import { NkAccountService } from '../nk-account.service';
 })
 export class NkAccountUpdateComponent implements OnInit {
   isSaving = false;
-  nkAccount: INkAccount | null = null;
+  nkAccount: IAccount | null = null;
   accessibilityValues = Object.keys(Accessibility);
 
   configurationsCollection: IConfig[] = [];
   usersSharedCollection: IUser[] = [];
 
-  protected nkAccountService = inject(NkAccountService);
+  protected nkAccountService = inject(AccountService);
   protected configService = inject(ConfigService);
   protected activatedRoute = inject(ActivatedRoute);
   protected fb = inject(FormBuilder);
@@ -68,7 +68,7 @@ export class NkAccountUpdateComponent implements OnInit {
   save(): void {
     // this.isSaving = true;
     const rawNkAccount = this.editForm.getRawValue();
-    const nkAccount: INkAccount = {
+    const nkAccount: IAccount = {
       ...rawNkAccount,
       createdAt: dayjs(rawNkAccount.createdAt, DATE_TIME_FORMAT),
     }
@@ -79,7 +79,7 @@ export class NkAccountUpdateComponent implements OnInit {
     }
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<INkAccount>>): void {
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IAccount>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
@@ -98,7 +98,7 @@ export class NkAccountUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  protected updateForm(nkAccount: INkAccount): void {
+  protected updateForm(nkAccount: IAccount): void {
     this.nkAccount = nkAccount;
     // this.editForm.reset({...nkAccount});
 

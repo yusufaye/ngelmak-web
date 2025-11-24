@@ -29,9 +29,9 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { Status } from "app/entities/enumerations/status.model";
-import { Subject } from "app/entities/enumerations/subject.model";
 import { Visibility } from "app/entities/enumerations/visibility.model";
 import { IFile } from "app/entities/models/nk-file.model";
+import { AccountService } from "app/entities/nk-account/nk-account.service";
 import { FileImageComponent } from "app/entities/nk-file/nk-file-image/nk-file-image.component";
 import { FileInputComponent } from "app/entities/nk-file/nk-file-input/nk-file-input.component";
 import { FileTextDialogComponent } from "app/entities/nk-file/nk-file-text/nk-file-text.component";
@@ -72,16 +72,15 @@ export class PostUpdateComponent implements OnInit {
   private postService = inject(PostService);
   private alertService = inject(AlertService);
   private activatedRoute = inject(ActivatedRoute);
-
   protected post = signal<IPost>(null);
   protected isSaving = signal(false);
   protected isLoading = signal(false);
   protected updatedFiles: IFile[] = [];
   protected deletedFiles: IFile[] = [];
-  protected subjectValues = Object.keys(Subject);
   protected visibilityValues = Object.keys(Visibility);
   protected statusValues = Object.keys(Status);
   protected keywords: string[] = [];
+  account = inject(AccountService).trackCurrentAccount();
 
   expandedIndexes: Set<number> = new Set<number>();
 
@@ -135,9 +134,7 @@ export class PostUpdateComponent implements OnInit {
         this.postService.update(post, newFiles, deletedFiles)
       );
     } else {
-      this.subscribeToSaveResponse(
-        this.postService.create(post, newFiles)
-      );
+      this.subscribeToSaveResponse(this.postService.create(post, newFiles));
     }
   }
 
@@ -180,18 +177,14 @@ export class PostUpdateComponent implements OnInit {
       enterAnimationDuration: "300ms",
       exitAnimationDuration: "150ms",
     });
-    const idx = this.updatedFiles.findIndex(
-      (e) => e.position == position
-    );
+    const idx = this.updatedFiles.findIndex((e) => e.position == position);
     if (idx > -1) {
       dialogRef.componentInstance.textContent =
         this.updatedFiles[idx].textContent;
     }
     dialogRef
       .afterClosed()
-      .subscribe((file: IFile) =>
-        this.afterClosed(position, file)
-      );
+      .subscribe((file: IFile) => this.afterClosed(position, file));
   }
 
   openFileVoiceRecoder(position?: number): void {
@@ -205,9 +198,7 @@ export class PostUpdateComponent implements OnInit {
 
     dialogRef
       .afterClosed()
-      .subscribe((file: IFile) =>
-        this.afterClosed(position, file)
-      );
+      .subscribe((file: IFile) => this.afterClosed(position, file));
   }
 
   openFileVideo(position?: number): void {
@@ -217,9 +208,7 @@ export class PostUpdateComponent implements OnInit {
       enterAnimationDuration: "300ms",
       exitAnimationDuration: "150ms",
     });
-    const idx = this.updatedFiles.findIndex(
-      (e) => e.position == position
-    );
+    const idx = this.updatedFiles.findIndex((e) => e.position == position);
     if (idx > -1) {
       dialogRef.componentInstance.file.set(this.updatedFiles[idx]);
     }
@@ -235,9 +224,7 @@ export class PostUpdateComponent implements OnInit {
       enterAnimationDuration: "300ms",
       exitAnimationDuration: "150ms",
     });
-    const idx = this.updatedFiles.findIndex(
-      (e) => e.position == position
-    );
+    const idx = this.updatedFiles.findIndex((e) => e.position == position);
     if (idx > -1) {
       dialogRef.componentInstance.file.set(this.updatedFiles[idx]);
     }
@@ -256,9 +243,7 @@ export class PostUpdateComponent implements OnInit {
 
     dialogRef
       .afterClosed()
-      .subscribe((file: IFile) =>
-        this.afterClosed(position, file)
-      );
+      .subscribe((file: IFile) => this.afterClosed(position, file));
   }
 
   private afterClosed(position?: number, file?: IFile) {
@@ -302,9 +287,7 @@ export class PostUpdateComponent implements OnInit {
    * @param poster
    */
   replace(position: number, file: IFile) {
-    const idx = this.updatedFiles.findIndex(
-      (e) => e.position == position
-    );
+    const idx = this.updatedFiles.findIndex((e) => e.position == position);
     const existsAttachement = this.updatedFiles[idx];
     if (existsAttachement.id) {
       this.deletedFiles.push(existsAttachement);
@@ -316,9 +299,7 @@ export class PostUpdateComponent implements OnInit {
 
   protected moveup(file: IFile) {
     this.updatedFiles = this.updatedFiles.sort((e) => e.position);
-    const idx = this.updatedFiles.findIndex(
-      (e) => e.position == file.position
-    );
+    const idx = this.updatedFiles.findIndex((e) => e.position == file.position);
     const switch_with_idx: number =
       idx > 0 ? idx - 1 : this.updatedFiles.length - 1;
     const tmp: IFile = this.updatedFiles[idx];
@@ -332,9 +313,7 @@ export class PostUpdateComponent implements OnInit {
 
   protected movedown(file: IFile) {
     this.updatedFiles = this.updatedFiles.sort((e) => e.position);
-    const idx = this.updatedFiles.findIndex(
-      (e) => e.position == file.position
-    );
+    const idx = this.updatedFiles.findIndex((e) => e.position == file.position);
     const switch_with_idx: number =
       idx < this.updatedFiles.length - 1 ? idx + 1 : 0;
     const tmp: IFile = this.updatedFiles[idx];
@@ -358,10 +337,7 @@ export class PostUpdateComponent implements OnInit {
     return this.expandedIndexes.has(idx);
   }
 
-  filterFile(
-    files: IFile[],
-    type: string = ""
-  ): IFile[] {
+  filterFile(files: IFile[], type: string = ""): IFile[] {
     return files.filter((e) => e.type === type);
   }
 

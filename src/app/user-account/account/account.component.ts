@@ -1,11 +1,11 @@
 import { AccountCertificationRequest } from "../account-certification-request/account-certification-request.component";
-import { AccountService } from "app/core/auth/account.service";
+import { AuthenticationService } from "app/core/auth/auth.service";
 import { Component, inject, OnInit } from "@angular/core";
 import { AccountUpdateComponent } from "./account-update/account-update.component";
 import { UserPasswordComponent } from "./user-password/user-password.component";
 import { UserUpdateComponent } from "../user-update/user-update.component";
 import { AccountConfigComponent } from "./account-config/account-config.component";
-import { Account } from "app/core/auth/account.model";
+import { Authentication } from "app/core/auth/auth.model";
 import { MatDialog } from "@angular/material/dialog";
 
 @Component({
@@ -21,10 +21,10 @@ import { MatDialog } from "@angular/material/dialog";
   styleUrl: "./account.component.scss",
 })
 export class AccountComponent implements OnInit {
-  account: Account;
+  account: Authentication;
 
   readonly dialog = inject(MatDialog);
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
 
   ngOnInit(): void {
     this.accountService

@@ -2,7 +2,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-import { Account } from 'app/core/auth/account.model';
+import { Authentication } from 'app/core/auth/auth.model';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { Pagination } from 'app/core/request/request.model';
@@ -15,21 +15,21 @@ export class UserManagementService {
 
   private resourceUrl = this.applicationConfigService.getEndpointFor('api/admin/users');
 
-  create(account: Account): Observable<Account> {
-    return this.http.post<Account>(this.resourceUrl, account);
+  create(account: Authentication): Observable<Authentication> {
+    return this.http.post<Authentication>(this.resourceUrl, account);
   }
 
-  update(account: Account): Observable<Account> {
-    return this.http.put<Account>(this.resourceUrl, account);
+  update(account: Authentication): Observable<Authentication> {
+    return this.http.put<Authentication>(this.resourceUrl, account);
   }
 
-  find(login: string): Observable<Account> {
-    return this.http.get<Account>(`${this.resourceUrl}/${login}`);
+  find(login: string): Observable<Authentication> {
+    return this.http.get<Authentication>(`${this.resourceUrl}/${login}`);
   }
 
-  query(req?: Pagination): Observable<HttpResponse<IPage<Account>>> {
+  query(req?: Pagination): Observable<HttpResponse<IPage<Authentication>>> {
     const options = createRequestOption(req);
-    return this.http.get<IPage<Account>>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<IPage<Authentication>>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
   delete(login: string): Observable<{}> {
@@ -45,15 +45,15 @@ export class UserManagementService {
   certificate(request: {
     officialDocType;
     officialDocIdentification;
-  }): Observable<HttpResponse<Account>> {
-    return this.http.put<Account>(`${this.resourceUrl}/certification`, request, { observe: 'response' });
+  }): Observable<HttpResponse<Authentication>> {
+    return this.http.put<Authentication>(`${this.resourceUrl}/certification`, request, { observe: 'response' });
   }
 
-  certificationWithdrawal(login): Observable<HttpResponse<Account>> {
-    return this.http.put<Account>(`${this.resourceUrl}/certification-withdrawal/${login}`, {}, { observe: 'response' });
+  certificationWithdrawal(login): Observable<HttpResponse<Authentication>> {
+    return this.http.put<Authentication>(`${this.resourceUrl}/certification-withdrawal/${login}`, {}, { observe: 'response' });
   }
 
-  getAccountCertification(login: string): Observable<HttpResponse<{}>> {
+  getAuthenticationCertification(login: string): Observable<HttpResponse<{}>> {
     return this.http.get(`${this.resourceUrl}/certification/${login}`, { observe: 'response' });
   }
 }

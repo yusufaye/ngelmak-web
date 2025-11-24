@@ -3,7 +3,7 @@ import { Accessibility } from 'app/entities/enumerations/accessibility.model';
 import { IConfig } from './nk-config.model';
 import { IUser } from '../user/user.model';
 
-export interface INkAccount {
+export interface IAccount {
   id: number | null;
   identifier?: string | null;
   name?: string | null;

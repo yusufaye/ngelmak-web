@@ -1,10 +1,10 @@
 import dayjs from 'dayjs/esm';
-import { INkAccount } from 'app/entities/models/nk-account.model';
+import { IAccount } from 'app/entities/models/nk-account.model';
 
 export interface IMembership {
   id: number;
   at?: dayjs.Dayjs | null;
   activateNotification?: boolean | null;
-  account?: Pick<INkAccount, 'id'> | null;
-  subscriber?: Pick<INkAccount, 'id'> | null;
+  account?: Pick<IAccount, 'id'> | null;
+  subscriber?: Pick<IAccount, 'id'> | null;
 }

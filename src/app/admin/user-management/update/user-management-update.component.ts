@@ -1,18 +1,18 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormGroup, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import SharedModule from 'app/shared/shared.module';
 import { LANGUAGES } from 'app/config/language.constants';
+import { Authentication } from 'app/core/auth/auth.model';
+import SharedModule from 'app/shared/shared.module';
 import { UserManagementService } from '../service/user-management.service';
-import { Account } from 'app/core/auth/account.model';
 
-const userTemplate = {} as Account;
+const userTemplate = {} as Authentication;
 
-const newUser: Account = {
+const newUser: Authentication = {
   langKey: 'fr',
   activated: true,
-} as Account;
+} as Authentication;
 
 @Component({
   standalone: true,

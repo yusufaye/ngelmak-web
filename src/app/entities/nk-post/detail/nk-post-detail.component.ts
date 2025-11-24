@@ -12,7 +12,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { IComment } from "app/entities/models/nk-comment.model";
 import { IFile } from "app/entities/models/nk-file.model";
 import { IPost } from "app/entities/models/nk-post.model";
-import { NkAccountService } from "app/entities/nk-account/nk-account.service";
+import { AccountService } from "app/entities/nk-account/nk-account.service";
 import { CommentService } from "app/entities/nk-comment/nk-comment.service";
 import { CommentUpdateComponent } from "app/entities/nk-comment/update/nk-comment-update.component";
 import { fadeInUp400ms } from "app/shared/animations/fade-in-up.animation";
@@ -46,8 +46,8 @@ export class PostDetailComponent implements OnInit {
   post: IPost | null = null;
   comments = signal<IComment[]>([]);
   files = signal<IFile[]>([]);
-  nkAccountService = inject(NkAccountService);
-  nkAccount = inject(NkAccountService).trackCurrentUser();
+  nkAccountService = inject(AccountService);
+  nkAccount = inject(AccountService).trackCurrentAccount();
   commentService = inject(CommentService);
   route = inject(ActivatedRoute);
 
@@ -57,7 +57,7 @@ export class PostDetailComponent implements OnInit {
     this.post = this.route.snapshot.data["post"];
     this.comments.set(this.post.comments);
     this.files.set(this.post.files);
-    this.nkAccountService.currentNkAccount().subscribe();
+    this.nkAccountService.currentAccount().subscribe();
     // this.loadAllComments();
   }
 

@@ -1,12 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
+import { Authentication } from 'app/core/auth/auth.model';
+import { AuthenticationService } from "app/core/auth/auth.service";
 import SharedModule from 'app/shared/shared.module';
-import { AccountService } from 'app/core/auth/account.service';
-import { Account } from 'app/core/auth/account.model';
-import { PasswordService } from './password.service';
 import PasswordStrengthBarComponent from './password-strength-bar/password-strength-bar.component';
+import { PasswordService } from './password.service';
+;
 
 @Component({
   standalone: true,
@@ -18,7 +19,7 @@ export default class PasswordComponent implements OnInit {
   doNotMatch = signal(false);
   error = signal(false);
   success = signal(false);
-  account$?: Observable<Account | null>;
+  account$?: Observable<Authentication | null>;
   passwordForm = new FormGroup({
     currentPassword: new FormControl('', { nonNullable: true, validators: Validators.required }),
     newPassword: new FormControl('', {
@@ -32,7 +33,7 @@ export default class PasswordComponent implements OnInit {
   });
 
   private passwordService = inject(PasswordService);
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
 
   ngOnInit(): void {
     this.account$ = this.accountService.identity();

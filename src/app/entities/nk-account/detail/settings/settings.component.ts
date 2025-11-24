@@ -12,7 +12,7 @@ import { MatInputModule } from "@angular/material/input";
 import { AlertService } from "app/shared/alert/alert.service";
 import SharedModule from "app/shared/shared.module";
 import { finalize } from "rxjs";
-import { NkAccountService } from "../../nk-account.service";
+import { AccountService } from "../../nk-account.service";
 import { Router } from "@angular/router";
 
 @Component({
@@ -29,9 +29,9 @@ import { Router } from "@angular/router";
 })
 export default class SettingsComponent implements OnInit {
   private router = inject(Router);
-  nkAccountService = inject(NkAccountService);
+  nkAccountService = inject(AccountService);
   alertService = inject(AlertService);
-  nkAccount = inject(NkAccountService).trackCurrentUser();
+  nkAccount = inject(AccountService).trackCurrentAccount();
   isSaving = signal(false);
 
   nkAccountForm = new FormGroup({
@@ -56,7 +56,7 @@ export default class SettingsComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.nkAccountService.currentNkAccount().subscribe();
+    this.nkAccountService.currentAccount().subscribe();
     this.nkAccountForm.patchValue(this.nkAccount());
   }
 

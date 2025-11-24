@@ -4,7 +4,7 @@ import { IUserPrivilege } from "app/entities/user-privilege/user-privilege.model
 import SharedModule from "app/shared/shared.module";
 
 import { MatDialog } from "@angular/material/dialog";
-import { Account } from "app/core/auth/account.model";
+import { Authentication } from "app/core/auth/auth.model";
 import { IPrivilege } from "app/entities/models/nk-privilege.model";
 import { PrivilegeService } from "app/entities/nk-privilege/service/nk-privilege.service";
 import { AlertService } from "app/shared/alert/alert.service";
@@ -25,7 +25,7 @@ export default class UserManagementDetailComponent {
   private alertService = inject(AlertService);
 
   privileges: IUserPrivilege[] = [];
-  account: Account | null = null;
+  account: Authentication | null = null;
   isRevoking = signal(false);
 
   ngOnInit(): void {
@@ -61,7 +61,7 @@ export default class UserManagementDetailComponent {
 
     dialogRef
       .afterClosed()
-      .subscribe((account: Account) => (this.account = account || this.account));
+      .subscribe((account: Authentication) => (this.account = account || this.account));
   }
 
   uncertificate() {
@@ -73,7 +73,7 @@ export default class UserManagementDetailComponent {
 
     dialogRef
       .afterClosed()
-      .subscribe((account: Account) => (this.account = account || this.account));
+      .subscribe((account: Authentication) => (this.account = account || this.account));
   }
 
   revoke(id: number) {

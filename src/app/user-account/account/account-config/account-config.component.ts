@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AccountService } from 'app/core/auth/account.service';
-import { IConfig } from 'app/entities/config/config.model';
-import { NkAccountService } from 'app/entities/nk-account/nk-account.service';
+import { AuthenticationService } from "app/core/auth/auth.service";import { IConfig } from 'app/entities/models/nk-config.model';
+;
+import { AccountService } from 'app/entities/nk-account/nk-account.service';
 import SharedModule from 'app/shared/shared.module';
 
 @Component({
@@ -13,9 +13,9 @@ import SharedModule from 'app/shared/shared.module';
   styleUrl: './account-config.component.scss'
 })
 export class AccountConfigComponent {
-  private nkAccountService = inject(NkAccountService);
-  account = inject(AccountService).trackCurrentAccount();
-  nkAccount = inject(NkAccountService).trackCurrentUser();
+  private nkAccountService = inject(AccountService);
+  account = inject(AuthenticationService).trackCurrentAuthentication();
+  nkAccount = inject(AccountService).trackCurrentAccount();
   isSaving = signal(false);
   flashBoxShadowState = null; // set to null to avoid flash box-shadow animation to first when the DOM starts.
 

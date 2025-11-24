@@ -1,12 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import SharedModule from 'app/shared/shared.module';
-import { AccountService } from 'app/core/auth/account.service';
-import { Account } from 'app/core/auth/account.model';
 import { LANGUAGES } from 'app/config/language.constants';
+import { Authentication } from 'app/core/auth/auth.model';
+import { AuthenticationService } from "app/core/auth/auth.service";
+import SharedModule from 'app/shared/shared.module';
+;
 
-const initialAccount: Account = {} as Account;
+const initialAuth: Authentication = {} as Authentication;
 
 @Component({
   standalone: true,
@@ -19,27 +20,27 @@ export default class SettingsComponent implements OnInit {
   languages = LANGUAGES;
 
   settingsForm = new FormGroup({
-    firstName: new FormControl(initialAccount.firstName, {
+    firstName: new FormControl(initialAuth.firstName, {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(1), Validators.maxLength(50)],
     }),
-    lastName: new FormControl(initialAccount.lastName, {
+    lastName: new FormControl(initialAuth.lastName, {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(1), Validators.maxLength(50)],
     }),
-    email: new FormControl(initialAccount.email, {
+    email: new FormControl(initialAuth.email, {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email],
     }),
-    langKey: new FormControl(initialAccount.langKey, { nonNullable: true }),
+    langKey: new FormControl(initialAuth.langKey, { nonNullable: true }),
 
-    activated: new FormControl(initialAccount.activated, { nonNullable: true }),
-    authorities: new FormControl(initialAccount.authorities, { nonNullable: true }),
-    imageUrl: new FormControl(initialAccount.imageUrl, { nonNullable: true }),
-    login: new FormControl(initialAccount.login, { nonNullable: true }),
+    activated: new FormControl(initialAuth.activated, { nonNullable: true }),
+    authorities: new FormControl(initialAuth.authorities, { nonNullable: true }),
+    imageUrl: new FormControl(initialAuth.imageUrl, { nonNullable: true }),
+    login: new FormControl(initialAuth.login, { nonNullable: true }),
   });
 
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
 
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => {

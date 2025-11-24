@@ -39,7 +39,7 @@ export class CertificationComponent implements OnInit {
   isSaving = signal(false);
 
   ngOnInit(): void {
-    this.userService.getAccountCertification(this.login).subscribe(res => (this.privilegeForm.patchValue(res.body)));
+    this.userService.getAuthenticationCertification(this.login).subscribe(res => (this.privilegeForm.patchValue(res.body)));
   }
 
   save() {

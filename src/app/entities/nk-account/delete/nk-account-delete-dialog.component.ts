@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 import SharedModule from 'app/shared/shared.module';
 
-import { INkAccount } from 'app/entities/models/nk-account.model';
-import { NkAccountService } from '../nk-account.service';
+import { IAccount } from 'app/entities/models/nk-account.model';
+import { AccountService } from '../nk-account.service';
 
 @Component({
   standalone: true,
@@ -13,9 +13,9 @@ import { NkAccountService } from '../nk-account.service';
   imports: [SharedModule, FormsModule],
 })
 export class NkAccountDeleteDialogComponent {
-  nkAccount?: INkAccount;
+  nkAccount?: IAccount;
 
-  protected nkAccountService = inject(NkAccountService);
+  protected nkAccountService = inject(AccountService);
 
 
   cancel(): void {

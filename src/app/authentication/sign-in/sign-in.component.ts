@@ -14,7 +14,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { SignInService } from "app/authentication/sign-in/sign-in.service";
-import { AccountService } from "app/core/auth/account.service";
+import { AuthenticationService } from "app/core/auth/auth.service";
 import SharedModule from "app/shared/shared.module";
 
 @Component({
@@ -35,7 +35,7 @@ import SharedModule from "app/shared/shared.module";
 })
 export default class SignInComponent implements OnInit {
   private signInService = inject(SignInService);
-  private accountService = inject(AccountService);
+  private authService = inject(AuthenticationService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private alertService = inject(AlertService);
@@ -50,8 +50,8 @@ export default class SignInComponent implements OnInit {
 
   ngOnInit(): void {
     // if already authenticated then navigate to home page
-    this.accountService.identity().subscribe(() => {
-      if (this.accountService.isAuthenticated()) {
+    this.authService.identity().subscribe(() => {
+      if (this.authService.isAuthenticated()) {
         this.router.navigate([""]);
       }
     });

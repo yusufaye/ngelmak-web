@@ -4,13 +4,13 @@ import { Router, RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SignInService } from 'app/authentication/sign-in/sign-in.service';
 import { LANGUAGES } from 'app/config/language.constants';
-import { AccountService } from 'app/core/auth/account.service';
+import { AuthenticationService } from "app/core/auth/auth.service";;
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { scaleInOut400ms } from 'app/shared/animations/scale-in-out.animation';
 import { ClickOutsideDirective } from 'app/shared/directives/click-outside.directive';
 import SharedModule from 'app/shared/shared.module';
 import { BehaviorSubject, fromEvent } from 'rxjs';
-import { NkAccountService } from 'app/entities/nk-account/nk-account.service';
+import { AccountService as NkAccountService } from 'app/entities/nk-account/nk-account.service';
 
 @Injectable({ providedIn: 'root' })
 export class NavbarService {
@@ -39,12 +39,12 @@ export default class NavbarComponent implements OnInit {
 
   private stateStorageService = inject(StateStorageService);
   private sidebarBehavior = inject(NavbarService);
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
   private nkAccountService = inject(NkAccountService);
   private signInService = inject(SignInService);
   private router = inject(Router);
-  account = inject(AccountService).trackCurrentAccount();
-  nkAccount = inject(NkAccountService).trackCurrentUser();
+  account = inject(AuthenticationService).trackCurrentAuthentication();
+  nkAccount = inject(NkAccountService).trackCurrentAccount();
 
   resize$ = fromEvent(window, 'resize');
 
@@ -62,7 +62,7 @@ export default class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.updateSideView(); // Detect the initial size of the window.
     this.accountService.identity().subscribe(); // update user account from the cache.
-    this.nkAccountService.currentNkAccount().subscribe(); // get nk-account from the cache.
+    this.nkAccountService.currentAccount().subscribe(); // get nk-account from the cache.
     this.resize$
       // .pipe(
       //   map((i: any) => i),

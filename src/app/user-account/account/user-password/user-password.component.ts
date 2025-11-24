@@ -2,12 +2,13 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { PasswordService } from 'app/user-account/password/password.service';
-import { Account } from 'app/core/auth/account.model';
-import { AccountService } from 'app/core/auth/account.service';
+import { Authentication } from 'app/core/auth/auth.model';
+import { AuthenticationService } from "app/core/auth/auth.service";
 import { flashBoxShadow2000ms } from 'app/shared/animations/flash.animation';
 import SharedModule from 'app/shared/shared.module';
+import { PasswordService } from 'app/user-account/password/password.service';
 import { Observable } from 'rxjs';
+;
 
 @Component({
   selector: 'app-user-password',
@@ -24,10 +25,10 @@ export class UserPasswordComponent {
   success = signal(false);
   error = signal(false);
   flashBoxShadowState = null; // set to null to avoid flash box-shadow animation to first when the DOM starts.
-  account$?: Observable<Account | null>;
+  account$?: Observable<Authentication | null>;
 
   private passwordService = inject(PasswordService);
-  private accountService = inject(AccountService);
+  private accountService = inject(AuthenticationService);
 
   passwordForm = this.fb.group({
     currentPassword: [null, Validators.required],
